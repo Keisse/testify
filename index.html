@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Clio - Trilha da História da Igreja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#58CC02;
+  --green-dark:#46A302;
+  --blue:#1CB0F6;
+  --blue-dark:#1899D6;
+  --red:#FF4B4B;
+  --red-dark:#E13939;
+  --gold:#FFC800;
+  --gold-dark:#E6B400;
+  --gray-bg:#F7F7F7;
+  --gray-border:#E5E5E5;
+  --gray-text:#777777;
+  --ink:#3C3C3C;
+  --purple:#CE82FF;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background: var(--gray-bg);
+  font-family:'Nunito', sans-serif;
+  color: var(--ink);
+  display:flex; justify-content:center;
+}
+h1,h2,h3{ font-family:'Baloo 2', sans-serif; margin:0; }
+#app{ width:100%; max-width:480px; min-height:100vh; background:#fff; position:relative; overflow:hidden; display:flex; flex-direction:column; }
+.screen{ display:none; flex-direction:column; flex:1; padding: 18px 20px 20px; }
+.screen.active{ display:flex; }
+button{ font-family:inherit; cursor:pointer; }
+
+.btn{
+  border:none; border-radius:16px; padding:15px 18px; font-family:'Baloo 2',sans-serif;
+  font-weight:700; font-size:16px; letter-spacing:0.5px; text-transform:uppercase;
+  color:#fff; background:var(--green); box-shadow: 0 4px 0 var(--green-dark);
+  transition: transform .05s ease;
+}
+.btn:active{ transform: translateY(4px); box-shadow:none; }
+.btn:disabled{ background:#E5E5E5; color:#AFAFAF; box-shadow:0 4px 0 #D0D0D0; cursor:not-allowed; }
+.btn.blue{ background:var(--blue); box-shadow:0 4px 0 var(--blue-dark); }
+.btn.outline{ background:#fff; color:var(--gray-text); border:2px solid var(--gray-border); box-shadow:0 4px 0 var(--gray-border); }
+.btn.red{ background:var(--red); box-shadow:0 4px 0 var(--red-dark); }
+.btn.small{ padding:9px 14px; font-size:12px; border-radius:12px; box-shadow:0 3px 0 var(--gray-border); }
+
+/* ---------- INTRO ---------- */
+#screen-intro{ align-items:center; text-align:center; justify-content:center; gap:10px; }
+.mascot-wrap{ position:relative; }
+.badge-pill{
+  position:absolute; top:-6px; right:-20px; background:var(--gold); color:#5B4600; font-family:'Baloo 2';
+  font-weight:800; font-size:11px; padding:5px 10px; border-radius:20px; transform:rotate(8deg);
+  box-shadow:0 3px 0 var(--gold-dark);
+}
+#screen-intro h1{ font-size:26px; color:var(--ink); margin-top:6px; }
+#screen-intro p{ color:var(--gray-text); font-size:15px; max-width:300px; font-weight:600; }
+
+/* ---------- MAP ---------- */
+#screen-map{ gap:14px; }
+.map-header{ display:flex; justify-content:space-between; align-items:center; }
+.stat-pill{ display:flex; align-items:center; gap:6px; font-family:'Baloo 2'; font-weight:700; font-size:16px; background:var(--gray-bg); padding:6px 12px; border-radius:20px; }
+#screen-map h2{ font-size:20px; color:var(--ink); }
+.map-sub{ color:var(--gray-text); font-weight:700; font-size:13px; margin-top:-8px;}
+.trail{ display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:12px; padding-bottom:20px; }
+.node-btn{ width:88px; height:88px; border-radius:50%; border:none; background:var(--gray-border); box-shadow:0 6px 0 #cfcfcf; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.node-btn.done{ background:var(--gold); box-shadow:0 6px 0 var(--gold-dark); }
+.node-btn.active{ background:var(--green); box-shadow:0 6px 0 var(--green-dark); }
+.node-btn:disabled{ opacity:0.55; }
+.node-btn:active:not(:disabled){ transform:translateY(5px); box-shadow:none; }
+.node-emoji{ font-size:26px; }
+.node-label{ font-family:'Baloo 2'; font-size:11px; font-weight:700; color:#fff; text-align:center; width:70px; margin-top:2px; }
+.node-btn.done .node-label, .node-btn.active .node-label{ color:#fff; }
+.node-btn:not(.done):not(.active) .node-label{ color:#8a8a8a; }
+
+/* ---------- QUIZ ---------- */
+#screen-quiz{ gap:12px; padding-bottom:0; }
+.quiz-top{ display:flex; align-items:center; gap:12px; }
+.close-x{ font-size:22px; color:var(--gray-border); font-weight:700; background:none; border:none; }
+.progressbar{ flex:1; height:16px; background:var(--gray-border); border-radius:20px; overflow:hidden; }
+.progressbar-fill{ height:100%; background:var(--green); border-radius:20px; width:0%; transition:width .35s ease; }
+.hearts{ font-family:'Baloo 2'; font-weight:700; color:var(--red); display:flex; align-items:center; gap:3px; font-size:15px; white-space:nowrap; }
+
+.q-type-label{ font-family:'Baloo 2'; font-size:12px; color:var(--blue); text-transform:uppercase; font-weight:700; letter-spacing:0.5px; }
+.q-prompt{ font-family:'Baloo 2'; font-size:20px; font-weight:700; color:var(--ink); line-height:1.3; }
+.q-body{ flex:1; display:flex; flex-direction:column; gap:12px; overflow-y:auto; padding-bottom:10px;}
+
+.quote-box{ background:var(--gray-bg); border-radius:14px; padding:14px; font-style:italic; font-size:14px; color:var(--ink); border-left:5px solid var(--blue); }
+
+.option-list{ display:flex; flex-direction:column; gap:10px; }
+.option{
+  background:#fff; border:2px solid var(--gray-border); border-bottom-width:4px; border-radius:14px; padding:14px 16px;
+  text-align:left; font-weight:700; font-size:15px; color:var(--ink); display:flex; justify-content:space-between; align-items:center;
+}
+.option .icon{ font-size:18px; opacity:0; }
+.option.correct{ background:#D7FFB8; border-color:var(--green); color:var(--green-dark); }
+.option.correct .icon{ opacity:1; }
+.option.wrong{ background:#FFDFE0; border-color:var(--red); color:var(--red-dark); }
+.option.wrong .icon{ opacity:1; }
+.option.disabled{ pointer-events:none; opacity:0.5; }
+
+.letters-line{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.letter-box{ width:36px; height:42px; border-bottom:3px solid var(--gray-border); border-radius:8px; background:var(--gray-bg); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; text-transform:uppercase; color:var(--ink); }
+.letter-box.filled{ border-bottom-color: var(--blue); background:#fff; border:2px solid var(--blue); }
+.letter-box.correct{ border-color:var(--green); background:#D7FFB8; color:var(--green-dark); }
+.letter-box.wrong{ border-color:var(--red); background:#FFDFE0; color:var(--red-dark); }
+.letter-key{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; justify-content:center; }
+.letter-key button{ width:38px; height:44px; border-radius:12px; border:2px solid var(--gray-border); border-bottom-width:4px; background:#fff; font-weight:800; font-size:16px; color:var(--ink); text-transform:uppercase; }
+.letter-key button:disabled{ opacity:0.25; }
+.hint-text{ color:var(--gray-text); font-weight:600; font-size:13px; text-align:center; }
+
+.match-cols{ display:flex; gap:10px; }
+.match-col{ flex:1; display:flex; flex-direction:column; gap:8px; }
+.match-item{ background:#fff; border:2px solid var(--gray-border); border-bottom-width:4px; border-radius:12px; padding:12px 8px; font-size:13px; font-weight:700; text-align:center; color:var(--ink); }
+.match-item.selected{ border-color:var(--blue); background:#E7F7FF; }
+.match-item.paired{ border-color:var(--gold); background:#FFF4CE; }
+.match-item.matched{ border-color:var(--green); background:#D7FFB8; color:var(--green-dark); pointer-events:none; }
+.match-item.wrong{ border-color:var(--red); background:#FFDFE0; color:var(--red-dark); pointer-events:none; opacity:0.9; }
+
+.slot-row{ display:flex; flex-wrap:wrap; gap:8px; min-height:52px; padding:10px; background:var(--gray-bg); border-radius:14px; }
+.slot{ min-width:60px; min-height:38px; background:#fff; border-radius:10px; border:2px dashed var(--gray-border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; padding:4px 8px; color:var(--ink); text-align:center; }
+.slot.filled{ border-style:solid; border-color:var(--blue); }
+.slot.correct{ border-color:var(--green); background:#D7FFB8; }
+.slot.wrong{ border-color:var(--red); background:#FFDFE0; }
+.word-bank{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+.chip{ background:#fff; border:2px solid var(--gray-border); border-bottom-width:4px; border-radius:12px; padding:9px 13px; font-size:13px; font-weight:700; color:var(--ink); cursor:pointer; }
+.chip.placed{ opacity:0.25; pointer-events:none; }
+
+.timeline-wrap{ padding:6px 0; }
+.timeline-track{ position:relative; height:6px; background:var(--gray-border); border-radius:6px; margin: 10px 4px 10px; }
+.tl-slots{ display:flex; justify-content:space-between; gap:4px; }
+.tl-slot{ flex:1; min-height:64px; border:2px dashed var(--gray-border); border-radius:12px; background:var(--gray-bg); display:flex; align-items:center; justify-content:center; text-align:center; font-size:10px; font-weight:700; padding:4px; color:var(--gray-text); cursor:pointer; }
+.tl-slot.filled{ border-style:solid; border-color:var(--blue); background:#E7F7FF; color:var(--ink); }
+.tl-slot.correct{ border-color:var(--green); background:#D7FFB8; color:var(--green-dark); }
+.tl-slot.wrong{ border-color:var(--red); background:#FFDFE0; color:var(--red-dark); }
+.tl-bank{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; justify-content:center; }
+.tl-card{ background:#fff; border:2px solid var(--gold); border-bottom-width:4px; border-radius:12px; padding:9px 12px; font-size:12px; font-weight:700; cursor:grab; color:var(--ink); }
+.tl-card.used{ opacity:0.2; pointer-events:none; }
+.date-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.date-row .lbl{ flex:1; font-size:13px; font-weight:700; }
+.date-drop{ width:74px; min-height:42px; border:2px dashed var(--gray-border); border-radius:12px; background:var(--gray-bg); display:flex; align-items:center; justify-content:center; font-weight:800; cursor:pointer; }
+.date-drop.filled{ border-style:solid; border-color:var(--blue); background:#E7F7FF; }
+.date-drop.correct{ border-color:var(--green); background:#D7FFB8; }
+.date-drop.wrong{ border-color:var(--red); background:#FFDFE0; }
+.reset-row{ display:flex; justify-content:flex-end; }
+
+/* Bottom feedback panel (Duolingo-style) */
+.feedback-panel{
+  position:sticky; bottom:0; left:0; right:0; padding:16px 20px 20px; margin:0 -20px;
+  display:flex; flex-direction:column; gap:10px; transform:translateY(100%); transition: transform .25s ease;
+}
+.feedback-panel.show{ transform:translateY(0); }
+.feedback-panel.ok{ background:#D7FFB8; }
+.feedback-panel.bad{ background:#FFDFE0; }
+.fb-title{ font-family:'Baloo 2'; font-weight:800; font-size:17px; display:flex; align-items:center; gap:8px; }
+.feedback-panel.ok .fb-title{ color:var(--green-dark); }
+.feedback-panel.bad .fb-title{ color:var(--red-dark); }
+.fb-sub{ font-weight:700; font-size:13px; color:var(--ink); }
+
+.q-footer{ padding: 4px 0 0; }
+.reveal-box{ background:#FFF4CE; border:2px solid #FFE380; border-radius:12px; padding:10px 14px; font-size:13px; font-weight:700; color:#7A5C00; margin-top:4px; line-height:1.5; }
+.reveal-box strong{ color:#5B4600; }
+
+/* RESULT */
+#screen-result{ align-items:center; text-align:center; justify-content:center; gap:8px; }
+.xp-badge{ font-family:'Baloo 2'; font-size:44px; color:var(--gold-dark); font-weight:800; }
+.result-emoji{ font-size:56px; }
+
+.confetti-piece{ position:fixed; top:-10px; width:9px; height:14px; opacity:.95; z-index:999; animation: fall 1.2s linear forwards; border-radius:2px;}
+@keyframes fall{ to{ transform: translateY(700px) rotate(360deg); opacity:0; } }
+.shake{ animation: shake .4s; }
+@keyframes shake{ 10%,90%{transform:translateX(-3px);} 20%,80%{transform:translateX(5px);} 30%,50%,70%{transform:translateX(-8px);} 40%,60%{transform:translateX(8px);} }
+.pop{ animation: pop .25s ease; }
+@keyframes pop{ 0%{transform:scale(1);} 40%{transform:scale(1.06);} 100%{transform:scale(1);} }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="mascot-wrap">
+      <svg width="150" height="170" viewBox="0 0 150 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="75" cy="160" rx="50" ry="10" fill="#000" opacity="0.08"/>
+        <path d="M35 160 Q28 95 40 68 Q50 44 75 44 Q100 44 110 68 Q122 95 115 160 Z" fill="#1CB0F6"/>
+        <path d="M75 44 Q100 44 110 68 Q118 88 116 120 L90 120 Q92 90 75 78 Z" fill="#1899D6"/>
+        <circle cx="75" cy="42" r="30" fill="#FFD9AE"/>
+        <path d="M45 30 Q75 2 105 30 Q106 16 90 10 Q75 3 60 10 Q44 16 45 30 Z" fill="#5C3D2E"/>
+        <circle cx="62" cy="44" r="10" fill="#fff" stroke="#3C3C3C" stroke-width="3"/>
+        <circle cx="88" cy="44" r="10" fill="#fff" stroke="#3C3C3C" stroke-width="3"/>
+        <circle cx="62" cy="44" r="3.5" fill="#3C3C3C"/>
+        <circle cx="88" cy="44" r="3.5" fill="#3C3C3C"/>
+        <line x1="72" y1="44" x2="78" y2="44" stroke="#3C3C3C" stroke-width="3"/>
+        <line x1="52" y1="41" x2="45" y2="38" stroke="#3C3C3C" stroke-width="3"/>
+        <line x1="98" y1="41" x2="105" y2="38" stroke="#3C3C3C" stroke-width="3"/>
+        <path d="M63 58 Q75 66 87 58" fill="none" stroke="#3C3C3C" stroke-width="3" stroke-linecap="round"/>
+        <rect x="16" y="112" width="36" height="26" rx="4" fill="#FFC800" stroke="#E6B400" stroke-width="2" transform="rotate(-16 34 125)"/>
+        <circle cx="122" cy="112" r="13" fill="none" stroke="#FFC800" stroke-width="4"/>
+        <line x1="131" y1="121" x2="140" y2="130" stroke="#FFC800" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <div class="badge-pill">MESTRE<br>DE HISTÓRIA</div>
+    </div>
+    <h1>Olá, eu sou o Clio!</h1>
+    <p>Vou te guiar página por página pela História da Igreja. Fatos, datas, nomes e linhas do tempo direto do seu livro.</p>
+    <button class="btn" style="margin-top:18px; width:100%;" onclick="goTo('screen-map')">COMEÇAR</button>
+  </div>
+
+  <!-- MAP -->
+  <div class="screen" id="screen-map">
+    <div class="map-header">
+      <div class="stat-pill">🏆 <span id="xp-total">0</span> XP</div>
+      <div class="stat-pill">🔥 <span id="streak-total">0</span></div>
+    </div>
+    <h2>Módulo 2A</h2>
+    <div class="map-sub">Páginas 283–291</div>
+    <div class="trail" id="trail"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-top">
+      <button class="close-x" onclick="backToMap()">✕</button>
+      <div class="progressbar"><div class="progressbar-fill" id="progress-fill"></div></div>
+      <div class="hearts" id="hearts-display">❤️ 5</div>
+    </div>
+    <div class="q-type-label" id="q-type-label"></div>
+    <div class="q-prompt" id="q-prompt"></div>
+    <div class="q-body" id="q-body"></div>
+    <div class="q-footer" id="q-footer"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="result-emoji">🎉</div>
+    <h2 id="result-title">Lição concluída!</h2>
+    <div class="xp-badge">+<span id="result-xp">0</span> XP</div>
+    <p id="result-detail" style="color:var(--gray-text); font-weight:700;"></p>
+    <button class="btn" style="width:100%; margin-top:14px;" onclick="backToMap()">CONTINUAR</button>
+  </div>
+
+</div>
+
+<script>
+/* ================= DADOS (páginas 283-291) ================= */
+const LESSONS = [
+{
+  id:'l1', title:'Fundamentos', pages:'283-285',
+  questions:[
+    {type:'fill', prompt:'Complete a definição:', text:'{blank} vem do grego antigo *historie*, que significa testemunho, sob o ponto de vista daquele que vê.', answer:'História', options:['História','Igreja','Teologia','Filosofia']},
+    {type:'word', prompt:'Complete o nome do "pai da História":', word:'HERODOTO', hint:'Grego, considerado o primeiro a encarar a História como investigação e pesquisa.'},
+    {type:'match', prompt:'Associe o termo ao seu significado:', pairs:[
+      ['Ekklesia','Reunião de chamados para fora'],
+      ['Historie','Testemunho de quem vê'],
+      ['Teos + Logia','Estudo de Deus'],
+    ]},
+    {type:'select', prompt:'O que Jesus fez com os doze homens escolhidos?', text:'"Jesus chamou e treinou doze homens para que continuassem a obra que Ele havia iniciado, como parte do plano soberano do Criador."', options:['Enviou-os para governar Roma','Chamou e treinou para continuar Sua obra','Pediu que escrevessem a Bíblia sozinhos','Mandou que guardassem segredo para sempre'], correct:1},
+    {type:'order', prompt:'Ordene a sequência conforme o texto:', pieces:['Jesus chamou e treinou doze homens','para que continuassem a obra','e equipar a triunfante Igreja de Cristo']},
+    {type:'select', prompt:'Segundo a Nota do Editor, como o material trata as divergências de datação?', text:'"Nos casos de divergências nas datações por parte de alguns autores, adotaremos o critério da observação de convergências, dialogando as datações mais aproximadas do ponto de vista histórico e teológico."', options:['Adota o critério de observar as convergências entre os autores','Ignora todas as datas por completo','Segue sempre um único autor sem checar outros','Considera que datas não têm importância nenhuma'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Segundo Efésios 1:22-23, a Igreja é chamada de {blank} de Cristo.', answer:'corpo', options:['corpo','noiva','templo','família']},
+    {type:'word', prompt:'Complete o nome do teólogo:', word:'AGOSTINHO', hint:'Destacou-se fazendo uma interpretação teológica da História — no grego, *teos* (Deus) + *logia* (estudo).'},
+    {type:'select', prompt:'Qual anotação o aluno fez sobre a base da Igreja (referenciando Mateus 16:13-18)?', text:'"A base da Igreja é Jesus e não Pedro."', options:['A Igreja é fundamentada em Jesus, não em Pedro','A Igreja é fundamentada em Pedro','A Igreja não tem fundamento definido','A Igreja é fundamentada apenas na tradição'], correct:0},
+    {type:'match', prompt:'Associe cada termo da periodização:', pairs:[
+      ['a.C.','Antes de Cristo, em ordem decrescente'],
+      ['d.C.','Depois de Cristo, em ordem crescente'],
+      ['Nascimento de Cristo','Marco inicial da periodização cristã'],
+    ]},
+  ]
+},
+{
+  id:'l2', title:'Timeline', pages:'286-287',
+  questions:[
+    {type:'timeline_periods', prompt:'Arraste cada período da Igreja para a ordem cronológica certa:',
+     items:['Igreja Apostólica','Igreja Perseguida','Igreja Imperial','Igreja Medieval','Igreja Reformada','Igreja Pós-moderna']},
+    {type:'timeline_dates', prompt:'Arraste a data certa para cada marco:',
+     items:[
+       {label:'Queda do Império Romano do Ocidente', date:'476'},
+       {label:'Queda de Constantinopla', date:'1453'},
+       {label:'Revolução Francesa', date:'1789'},
+     ]},
+    {type:'fill', prompt:'Complete:', text:'A Igreja Imperial começou com o {blank} (311 d.C.), confirmado pelo Edito de Milão (313 d.C.).', answer:'Edito de Tolerância', options:['Edito de Tolerância','Edito de Roma','Concílio de Niceia','Edito de Milão II']},
+    {type:'select', prompt:'Por que estudar a História da Igreja?', text:'"É necessário estar pronto para a defesa da fé (1 Pedro 3:15)."', options:['Só para passar em provas','Para estar pronto para a defesa da fé e entender o contexto atual','Porque não há outro motivo relevante','Para memorizar datas sem propósito'], correct:1},
+    {type:'select', prompt:'De acordo com a dica do livro, a que anos corresponde o Século XXI?', text:'"SÉC XXI = 2001 à 2100 anos"', options:['2001 a 2100','1901 a 2000','1801 a 1900','2100 a 2200'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A Igreja Apostólica vai de 33 d.C. até aproximadamente {blank} d.C. (morte de João).', answer:'100', options:['100','200','305','313']},
+    {type:'match', prompt:'Associe cada Idade ao seu sistema econômico:', pairs:[
+      ['Idade Antiga','Escravismo'],
+      ['Idade Média','Feudalismo'],
+      ['Idade Moderna','Capitalismo'],
+      ['Idade Contemporânea','Capitalismo/Globalização'],
+    ]},
+    {type:'order', prompt:'Ordene as Idades da periodização histórica:', pieces:['Idade Antiga','Idade Média','Idade Moderna','Idade Contemporânea']},
+    {type:'select', prompt:'Segundo 1 Coríntios 9:20-23, qual era a atitude de Paulo para alcançar as pessoas?', text:'"Fiz-me fraco para com os fracos, com o fim de ganhar os fracos. Fiz-me tudo para com todos, com o fim de, por todos os modos, salvar alguns."', options:['Adaptava-se a diferentes grupos para ganhar pessoas para o evangelho','Recusava-se a se adaptar a qualquer grupo','Só pregava para os judeus','Não se importava com os resultados de sua pregação'], correct:0},
+    {type:'word', prompt:'Complete o nome do imperador romano:', word:'DIOCLECIANO', hint:'Durante seu domínio terminou o período da Igreja Perseguida, em 305 d.C.'},
+  ]
+},
+{
+  id:'l3', title:'Plenitude do Tempo', pages:'288-291',
+  questions:[
+    {type:'match', prompt:'Associe cada povo à sua contribuição:', pairs:[
+      ['Gregos','Cultura, filosofia e língua'],
+      ['Romanos','Domínio político e estradas (Pax Romana)'],
+      ['Judeus','Religião e monoteísmo'],
+    ]},
+    {type:'word', prompt:'Complete o formulador do Estoicismo:', word:'ZENAO', hint:'Ensinava que todas as coisas emanavam de Deus, inclusive o bem e o mal.'},
+    {type:'word', prompt:'Complete o formulador do Epicurismo:', word:'EPICURO', hint:'Deísta — cria em deus(es), mas sem compromisso com o homem; não cria na vida além-túmulo.'},
+    {type:'select', prompt:'O que foi a "Pax Romana"?', text:'"A unificação dos povos: nas áreas em que Roma exercia seu domínio, os povos eram unidos e as fronteiras eram abertas."', options:['Um tratado só com a Grécia','Unificação dos povos sob domínio de Roma, com fronteiras abertas','Uma guerra civil romana','O nome do exército de Roma'], correct:1},
+    {type:'order', prompt:'Ordene a evolução dos materiais de escrita:', pieces:['Rolos de papiro','Pergaminho (mais contemporâneo ao Novo Testamento)','Papel (inventado pelos chineses no séc. II)','Prensa móvel de Gutenberg (1400-1468)']},
+    {type:'fill', prompt:'Complete:', text:'A palavra "Bíblia" vem do grego e significa {blank}.', answer:'coleção de livros pequenos', options:['coleção de livros pequenos','testemunho ocular','revelação divina','vara de medir']},
+    {type:'fill', prompt:'Complete:', text:'O Novo Testamento foi originalmente escrito em {blank}, língua universal da época apesar de os romanos falarem latim.', answer:'grego', options:['grego','latim','hebraico','aramaico']},
+    {type:'select', prompt:'O que caracteriza o povo judeu segundo o texto?', text:'"Aparentemente, eles foram o único povo monoteísta de sua época — acreditavam em um só Deus criador e sustentador de todas as coisas."', options:['Eram o único povo monoteísta da época','Adoravam vários deuses','Não tinham religião organizada','Rejeitavam a existência de Deus'], correct:0},
+    {type:'word', prompt:'Complete o nome do inventor:', word:'GUTENBERG', hint:'Inventou a prensa móvel (1400-1468), essencial para a produção em massa de livros.'},
+    {type:'fill', prompt:'Complete:', text:'A Bíblia tem 66 livros: {blank} no Antigo Testamento e 27 no Novo Testamento.', answer:'39', options:['39','40','27','66']},
+  ]
+}
+];
+
+/* ================= ESTADO ================= */
+let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{} };
+const STORAGE_KEY = 'progress';
+
+async function loadProgress(){
+  try{
+    const r = await window.storage.get(STORAGE_KEY, false);
+    if(r && r.value){ const d = JSON.parse(r.value); state.xp = d.xp||0; state.streak = d.streak||0; state.progress = d.progress||{}; }
+  }catch(e){}
+  renderMap();
+}
+async function saveProgress(){
+  try{ await window.storage.set(STORAGE_KEY, JSON.stringify({xp:state.xp, streak:state.streak, progress:state.progress}), false); }catch(e){}
+}
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='screen-map') renderMap();
+}
+
+function renderMap(){
+  document.getElementById('xp-total').textContent = state.xp;
+  document.getElementById('streak-total').textContent = state.streak;
+  const trail = document.getElementById('trail');
+  trail.innerHTML = '';
+  LESSONS.forEach((lesson, idx)=>{
+    const done = state.progress[lesson.id];
+    const locked = idx>0 && !state.progress[LESSONS[idx-1].id];
+    const btn = document.createElement('button');
+    btn.className = 'node-btn ' + (done?'done':(locked?'':'active'));
+    btn.disabled = locked;
+    btn.onclick = ()=>startLesson(lesson.id);
+    btn.innerHTML = `<div class="node-emoji">${done?'⭐':(locked?'🔒':'📖')}</div><div class="node-label">${lesson.title}</div>`;
+    trail.appendChild(btn);
+  });
+}
+
+function startLesson(id){
+  const lesson = LESSONS.find(l=>l.id===id);
+  state.currentLesson = lesson;
+  state.qIndex = 0;
+  state.hearts = 5;
+  state.lessonCorrect = 0;
+  goTo('screen-quiz');
+  renderQuestion();
+}
+
+function renderHearts(){
+  document.getElementById('hearts-display').textContent = '❤️ ' + state.hearts;
+}
+
+function renderQuestion(){
+  state.answered = false;
+  const lesson = state.currentLesson;
+  const q = lesson.questions[state.qIndex];
+  document.getElementById('progress-fill').style.width = ((state.qIndex)/lesson.questions.length*100)+'%';
+  renderHearts();
+  document.getElementById('q-footer').innerHTML = '';
+
+  const typeLabels = {fill:'Preencher as Lacunas', word:'Completar Palavra', match:'Associar Colunas', select:'Ler e Selecionar', order:'Montar Frase', timeline_periods:'Timeline', timeline_dates:'Timeline'};
+  document.getElementById('q-type-label').textContent = typeLabels[q.type] || '';
+  document.getElementById('q-prompt').textContent = q.prompt;
+
+  const body = document.getElementById('q-body');
+  body.innerHTML = '';
+
+  if(q.type==='fill'){
+    const [before, after] = q.text.split('{blank}');
+    const p = document.createElement('p');
+    p.style.fontSize='16px'; p.style.fontWeight='700';
+    p.innerHTML = before + '<span id="blank-slot" style="display:inline-block;min-width:130px;border-bottom:3px solid var(--blue);text-align:center;color:var(--blue);">?</span>' + after;
+    body.appendChild(p);
+    const list = document.createElement('div'); list.className='option-list';
+    q.options.forEach(opt=>{
+      const b = document.createElement('button'); b.className='option';
+      b.innerHTML = `<span>${opt}</span><span class="icon">✓</span>`;
+      b.onclick = ()=>{ if(state.answered) return;
+        document.getElementById('blank-slot').textContent = opt;
+        q._selected = opt;
+        finalizeAnswer(q, opt===q.answer, [b], q.options.indexOf(q.answer));
+      };
+      list.appendChild(b);
+    });
+    body.appendChild(list);
+  }
+
+  else if(q.type==='word'){
+    const p = document.createElement('p'); p.className='hint-text'; p.textContent = q.hint;
+    body.appendChild(p);
+    const line = document.createElement('div'); line.className='letters-line'; line.id='letters-line';
+    q._answerArr = new Array(q.word.length).fill('');
+    for(let i=0;i<q.word.length;i++){
+      const lb = document.createElement('div'); lb.className='letter-box'; lb.id='lb-'+i;
+      lb.onclick = ()=>{ if(state.answered || !q._answerArr[i]) return; returnLetter(q,i); };
+      line.appendChild(lb);
+    }
+    body.appendChild(line);
+    const key = document.createElement('div'); key.className='letter-key'; key.id='letter-key';
+    const letters = q.word.split('').concat(['A','E','S','R','T','M','N']).sort(()=>Math.random()-0.5);
+    letters.forEach((ch,i)=>{
+      const btn = document.createElement('button'); btn.textContent = ch; btn.dataset.used='0'; btn.dataset.key=i;
+      btn.onclick = ()=>{
+        if(state.answered || btn.dataset.used==='1') return;
+        const idx = q._answerArr.indexOf('');
+        if(idx===-1) return;
+        q._answerArr[idx] = ch; btn.dataset.used='1'; btn.disabled=true; btn.dataset.slot=idx;
+        const lb = document.getElementById('lb-'+idx); lb.textContent = ch; lb.classList.add('filled'); lb.dataset.key=i;
+        if(q._answerArr.indexOf('')===-1){ finalizeWord(q); }
+      };
+      key.appendChild(btn);
+    });
+    body.appendChild(key);
+    const resetRow = document.createElement('div'); resetRow.className='reset-row';
+    const clearBtn = document.createElement('button'); clearBtn.className='btn outline small'; clearBtn.textContent='↺ Reiniciar';
+    clearBtn.onclick = ()=>{ if(state.answered) return;
+      q._answerArr = new Array(q.word.length).fill('');
+      for(let i=0;i<q.word.length;i++){ const lb=document.getElementById('lb-'+i); lb.textContent=''; lb.classList.remove('filled'); }
+      key.querySelectorAll('button').forEach(b=>{b.dataset.used='0'; b.disabled=false;});
+    };
+    resetRow.appendChild(clearBtn);
+    body.appendChild(resetRow);
+  }
+
+  else if(q.type==='match'){
+    q._assign = {}; q._usedRight = new Set(); q._selLeft = null;
+    const cols = document.createElement('div'); cols.className='match-cols';
+    const left = document.createElement('div'); left.className='match-col';
+    const right = document.createElement('div'); right.className='match-col';
+    const rightItems = q.pairs.map(p=>p[1]).sort(()=>Math.random()-0.5);
+
+    q.pairs.forEach((pair,i)=>{
+      const el = document.createElement('div'); el.className='match-item'; el.textContent=pair[0]; el.dataset.idx=i; el.id='ml-'+i;
+      el.onclick = ()=>{ if(state.answered) return;
+        if(q._assign[i]!==undefined){ unassignLeft(q,i); return; }
+        left.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
+        el.classList.add('selected'); q._selLeft = i; };
+      left.appendChild(el);
+    });
+    rightItems.forEach(txt=>{
+      const i = q.pairs.findIndex(p=>p[1]===txt);
+      const el = document.createElement('div'); el.className='match-item'; el.textContent=txt; el.dataset.idx=i; el.id='mr-'+i;
+      el.onclick = ()=>{ if(state.answered) return;
+        if(q._usedRight.has(i)){ const li = Object.keys(q._assign).find(k=>q._assign[k]===i); if(li!=null) unassignLeft(q, parseInt(li)); return; }
+        if(q._selLeft==null) return;
+        assignPair(q, q._selLeft, i); };
+      right.appendChild(el);
+    });
+    cols.appendChild(left); cols.appendChild(right);
+    body.appendChild(cols);
+    const hint = document.createElement('p'); hint.className='hint-text'; hint.textContent='Toque num item da esquerda e depois um da direita para ligar. Toque num par já feito para desfazer.';
+    body.appendChild(hint);
+  }
+
+  else if(q.type==='select'){
+    const p = document.createElement('div'); p.className='quote-box'; p.textContent = q.text;
+    body.appendChild(p);
+    const list = document.createElement('div'); list.className='option-list';
+    q.options.forEach((opt,i)=>{
+      const b = document.createElement('button'); b.className='option';
+      b.innerHTML = `<span>${opt}</span><span class="icon">✓</span>`;
+      b.onclick=()=>{ if(state.answered) return; q._selected=i; finalizeAnswer(q, i===q.correct, [b], q.correct); };
+      list.appendChild(b);
+    });
+    body.appendChild(list);
+  }
+
+  else if(q.type==='order'){
+    q._slots = new Array(q.pieces.length).fill(null);
+    const slotRow = document.createElement('div'); slotRow.className='slot-row'; slotRow.id='order-slots';
+    q.pieces.forEach((_,i)=>{ const s=document.createElement('div'); s.className='slot'; s.id='slot-'+i;
+      s.onclick = ()=>{ if(state.answered || q._slots[i]==null) return; returnOrderPiece(q,i); };
+      slotRow.appendChild(s); });
+    body.appendChild(slotRow);
+    const bank = document.createElement('div'); bank.className='word-bank'; bank.id='order-bank';
+    const shuffled = q.pieces.map((p,i)=>({p,i})).sort(()=>Math.random()-0.5);
+    shuffled.forEach(item=>{
+      const chip = document.createElement('div'); chip.className='chip'; chip.textContent=item.p; chip.dataset.idx=item.i; chip.id='chip-'+item.i;
+      chip.onclick = ()=>{ if(state.answered || chip.classList.contains('placed')) return;
+        const emptySlot = q._slots.indexOf(null);
+        if(emptySlot===-1) return;
+        q._slots[emptySlot] = item.i;
+        const slotEl = document.getElementById('slot-'+emptySlot);
+        slotEl.textContent = item.p; slotEl.classList.add('filled'); slotEl.dataset.piece=item.i;
+        chip.classList.add('placed');
+        if(q._slots.indexOf(null)===-1){ finalizeOrder(q); }
+      };
+      bank.appendChild(chip);
+    });
+    body.appendChild(bank);
+    const hint = document.createElement('p'); hint.className='hint-text'; hint.textContent='Toque nos trechos na ordem certa. Toque num espaço preenchido para desfazer.';
+    body.appendChild(hint);
+  }
+
+  else if(q.type==='timeline_periods'){
+    body.appendChild(makeEl('div','timeline-track'));
+    const slots = document.createElement('div'); slots.className='tl-slots'; slots.id='tl-slots';
+    q._slots = new Array(q.items.length).fill(null);
+    q.items.forEach((_,i)=>{
+      const s = document.createElement('div'); s.className='tl-slot'; s.id='tls-'+i; s.textContent = (i+1)+'ª';
+      s.ondragover = e=>e.preventDefault();
+      s.ondrop = e=>{ e.preventDefault(); if(state.answered) return; const val = e.dataTransfer.getData('text/plain'); placeTimelineItem(q,i,val); };
+      s.onclick = ()=>{ if(state.answered) return; if(q._slots[i]!=null){ returnTimelineItem(q,i); return; } if(q._pendingCard!=null){ placeTimelineItem(q,i,q._pendingCard); q._pendingCard=null; } };
+      slots.appendChild(s);
+    });
+    body.appendChild(slots);
+    const bank = document.createElement('div'); bank.className='tl-bank'; bank.id='tl-bank';
+    const shuffledIdx = q.items.map((_,i)=>i).sort(()=>Math.random()-0.5);
+    shuffledIdx.forEach(i=>{
+      const card = document.createElement('div'); card.className='tl-card'; card.textContent = q.items[i]; card.draggable=true; card.dataset.i=i; card.id='tlcard-'+i;
+      card.ondragstart = e=>{ if(state.answered) return; e.dataTransfer.setData('text/plain', i); };
+      card.onclick = ()=>{ if(state.answered || card.classList.contains('used')) return; q._pendingCard = i; document.querySelectorAll('.tl-card').forEach(c=>c.style.outline=''); card.style.outline='3px solid var(--gold)'; };
+      bank.appendChild(card);
+    });
+    body.appendChild(bank);
+    const hint = document.createElement('p'); hint.className='hint-text'; hint.textContent='Arraste (ou toque na carta, depois no espaço). Toque num espaço preenchido para desfazer.';
+    body.appendChild(hint);
+    const resetRow = document.createElement('div'); resetRow.className='reset-row';
+    const resetBtn = document.createElement('button'); resetBtn.className='btn outline small'; resetBtn.textContent='↺ Reiniciar linha do tempo';
+    resetBtn.onclick = ()=>{ if(state.answered) return; resetTimelinePeriods(q); };
+    resetRow.appendChild(resetBtn);
+    body.appendChild(resetRow);
+  }
+
+  else if(q.type==='timeline_dates'){
+    q._matches = {};
+    const wrap = document.createElement('div');
+    q.items.forEach((item,i)=>{
+      const row = document.createElement('div'); row.className='date-row';
+      const lbl = document.createElement('div'); lbl.className='lbl'; lbl.textContent = item.label;
+      const drop = document.createElement('div'); drop.className='date-drop'; drop.id='dts-'+i;
+      drop.ondragover = e=>e.preventDefault();
+      drop.ondrop = e=>{ e.preventDefault(); if(state.answered) return; const val=e.dataTransfer.getData('text/plain'); placeDateItem(q,i,val); };
+      drop.onclick = ()=>{ if(state.answered) return; if(q._matches[i]!=null){ returnDateItem(q,i); return; } if(q._pendingDate!=null){ placeDateItem(q,i,q._pendingDate); q._pendingDate=null; } };
+      row.appendChild(lbl); row.appendChild(drop);
+      wrap.appendChild(row);
+    });
+    body.appendChild(wrap);
+    const bank = document.createElement('div'); bank.className='tl-bank'; bank.id='date-bank';
+    const dates = q.items.map(it=>it.date).sort(()=>Math.random()-0.5);
+    dates.forEach(d=>{
+      const card = document.createElement('div'); card.className='tl-card'; card.textContent=d; card.draggable=true; card.dataset.date=d; card.id='datecard-'+d;
+      card.ondragstart = e=>{ if(state.answered) return; e.dataTransfer.setData('text/plain', d); };
+      card.onclick = ()=>{ if(state.answered || card.classList.contains('used')) return; q._pendingDate = d; document.querySelectorAll('#date-bank .tl-card').forEach(c=>c.style.outline=''); card.style.outline='3px solid var(--gold)'; };
+      bank.appendChild(card);
+    });
+    body.appendChild(bank);
+    const hint = document.createElement('p'); hint.className='hint-text'; hint.textContent='Toque num espaço preenchido para desfazer.';
+    body.appendChild(hint);
+    const resetRow = document.createElement('div'); resetRow.className='reset-row';
+    const resetBtn = document.createElement('button'); resetBtn.className='btn outline small'; resetBtn.textContent='↺ Reiniciar linha do tempo';
+    resetBtn.onclick = ()=>{ if(state.answered) return; resetTimelineDates(q); };
+    resetRow.appendChild(resetBtn);
+    body.appendChild(resetRow);
+  }
+}
+
+function makeEl(tag, cls){ const e=document.createElement(tag); e.className=cls; return e; }
+
+function revealAnswer(html){
+  const body = document.getElementById('q-body');
+  const box = document.createElement('div');
+  box.className = 'reveal-box';
+  box.innerHTML = '💡 <strong>Resposta correta:</strong> ' + html;
+  body.appendChild(box);
+}
+
+/* ---- Return / undo helpers ---- */
+function returnLetter(q, boxIdx){
+  const ch = q._answerArr[boxIdx];
+  q._answerArr[boxIdx] = '';
+  const lb = document.getElementById('lb-'+boxIdx); lb.textContent=''; lb.classList.remove('filled');
+  const key = document.getElementById('letter-key');
+  const btn = [...key.querySelectorAll('button')].find(b=>b.dataset.used==='1' && parseInt(b.dataset.slot)===boxIdx);
+  if(btn){ btn.dataset.used='0'; btn.disabled=false; delete btn.dataset.slot; }
+}
+function returnOrderPiece(q, slotIdx){
+  const pieceIdx = q._slots[slotIdx];
+  q._slots[slotIdx] = null;
+  const slotEl = document.getElementById('slot-'+slotIdx); slotEl.textContent=''; slotEl.classList.remove('filled');
+  document.getElementById('chip-'+pieceIdx).classList.remove('placed');
+}
+function returnTimelineItem(q, slotIdx){
+  const itemIdx = q._slots[slotIdx];
+  q._slots[slotIdx] = null;
+  const slotEl = document.getElementById('tls-'+slotIdx); slotEl.textContent=(slotIdx+1)+'ª'; slotEl.classList.remove('filled');
+  document.getElementById('tlcard-'+itemIdx).classList.remove('used');
+}
+function resetTimelinePeriods(q){
+  q._slots.forEach((v,i)=>{ if(v!=null){ const slotEl=document.getElementById('tls-'+i); slotEl.textContent=(i+1)+'ª'; slotEl.classList.remove('filled'); document.getElementById('tlcard-'+v).classList.remove('used'); } });
+  q._slots = new Array(q.items.length).fill(null);
+}
+function returnDateItem(q, idx){
+  const date = q._matches[idx];
+  delete q._matches[idx];
+  const el = document.getElementById('dts-'+idx); el.textContent=''; el.classList.remove('filled');
+  document.getElementById('datecard-'+date).classList.remove('used');
+}
+function resetTimelineDates(q){
+  Object.keys(q._matches).forEach(i=>{ const date=q._matches[i]; const el=document.getElementById('dts-'+i); el.textContent=''; el.classList.remove('filled'); document.getElementById('datecard-'+date).classList.remove('used'); });
+  q._matches = {};
+}
+
+function placeTimelineItem(q, slotIdx, itemIdx){
+  itemIdx = parseInt(itemIdx);
+  q._slots = q._slots.map(v=> v===itemIdx ? null : v);
+  document.querySelectorAll('.tl-slot').forEach(s=>{ if(s.dataset.item==itemIdx && s.id!=='tls-'+slotIdx){ const i=parseInt(s.id.split('-')[1]); s.textContent=(i+1)+'ª'; s.classList.remove('filled'); delete s.dataset.item; } });
+  q._slots[slotIdx] = itemIdx;
+  const slotEl = document.getElementById('tls-'+slotIdx);
+  slotEl.textContent = q.items[itemIdx]; slotEl.classList.add('filled'); slotEl.dataset.item = itemIdx;
+  document.getElementById('tlcard-'+itemIdx).classList.add('used');
+  if(q._slots.every(v=>v!==null)) finalizeTimelinePeriods(q);
+}
+function placeDateItem(q, idx, date){
+  Object.keys(q._matches).forEach(k=>{ if(q._matches[k]===date) returnDateItem(q, parseInt(k)); });
+  q._matches[idx] = date;
+  const el = document.getElementById('dts-'+idx);
+  el.textContent = date; el.classList.add('filled');
+  document.getElementById('datecard-'+date).classList.add('used');
+  if(Object.keys(q._matches).length === q.items.length) finalizeTimelineDates(q);
+}
+
+/* ---- Finalize / auto-check per type ---- */
+function finalizeAnswer(q, correct, optionEls, correctIdx){
+  state.answered = true;
+  optionEls.forEach(el=>{ el.classList.add(correct?'correct':'wrong'); });
+  document.querySelectorAll('.option').forEach(o=>o.classList.add('disabled'));
+  if(!correct && correctIdx!=null){ document.querySelectorAll('.option')[correctIdx].classList.add('correct'); }
+  showFeedback(correct);
+}
+
+function finalizeWord(q){
+  state.answered = true;
+  const correct = q._answerArr.join('') === q.word;
+  document.getElementById('letter-key').querySelectorAll('button').forEach(b=>b.disabled=true);
+  if(!correct){
+    document.querySelectorAll('.letter-box').forEach(lb=>lb.classList.add('wrong'));
+    revealAnswer(q.word);
+  } else {
+    document.querySelectorAll('.letter-box').forEach(lb=>lb.classList.add('correct'));
+  }
+  showFeedback(correct);
+}
+
+function assignPair(q, li, ri){
+  document.getElementById('ml-'+li).classList.remove('selected');
+  document.getElementById('ml-'+li).classList.add('paired');
+  document.getElementById('mr-'+ri).classList.add('paired');
+  q._assign[li] = ri;
+  q._usedRight.add(ri);
+  q._selLeft = null;
+  if(Object.keys(q._assign).length === q.pairs.length){ finalizeMatchAll(q); }
+}
+function unassignLeft(q, li){
+  const ri = q._assign[li];
+  delete q._assign[li];
+  q._usedRight.delete(ri);
+  document.getElementById('ml-'+li).classList.remove('paired');
+  document.getElementById('mr-'+ri).classList.remove('paired');
+}
+
+function finalizeMatchAll(q){
+  state.answered = true;
+  let correctCount = 0;
+  q.pairs.forEach((p,i)=>{
+    const ri = q._assign[i];
+    const ok = (ri === i);
+    if(ok) correctCount++;
+    document.getElementById('ml-'+i).classList.remove('paired');
+    document.getElementById('mr-'+ri).classList.remove('paired');
+    document.getElementById('ml-'+i).classList.add(ok?'matched':'wrong');
+    document.getElementById('mr-'+ri).classList.add(ok?'matched':'wrong');
+  });
+  const overallCorrect = correctCount === q.pairs.length;
+  if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  else { state.streak = 0; state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.pairs.map(p=>p[0]+' → '+p[1]).join('<br>')); }
+  renderHearts();
+  const subtitle = overallCorrect ? undefined : (state.hearts<=0 ? 'Sem corações! Veja as respostas certas acima.' : 'Alguns pares ficaram errados. Veja as respostas certas acima.');
+  renderFeedbackPanel(overallCorrect, subtitle);
+}
+
+function finalizeOrder(q){
+  state.answered = true;
+  const correct = q._slots.every((v,i)=>v===i);
+  q._slots.forEach((v,i)=>{
+    const slotEl = document.getElementById('slot-'+i);
+    slotEl.classList.add(v===i ? 'correct' : 'wrong');
+  });
+  if(!correct){ revealAnswer(q.pieces.map((p,i)=>(i+1)+'. '+p).join('<br>')); }
+  showFeedback(correct);
+}
+function finalizeTimelinePeriods(q){
+  state.answered = true;
+  const correct = q._slots.every((v,i)=>v===i);
+  q._slots.forEach((v,i)=>{
+    document.getElementById('tls-'+i).classList.add(v===i ? 'correct':'wrong');
+  });
+  if(!correct){ revealAnswer(q.items.join(' → ')); }
+  showFeedback(correct);
+}
+function finalizeTimelineDates(q){
+  state.answered = true;
+  const correct = q.items.every((it,i)=> q._matches[i]===it.date);
+  q.items.forEach((it,i)=>{
+    document.getElementById('dts-'+i).classList.add(q._matches[i]===it.date ? 'correct':'wrong');
+  });
+  if(!correct){ revealAnswer(q.items.map(it=>it.label+': <strong>'+it.date+'</strong>').join('<br>')); }
+  showFeedback(correct);
+}
+
+function showFeedback(correct){
+  if(correct){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  else { state.streak = 0; state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); }
+  renderHearts();
+  renderFeedbackPanel(correct);
+}
+
+function renderFeedbackPanel(correct, customSubtitle){
+  const footer = document.getElementById('q-footer');
+  const panel = document.createElement('div');
+  panel.className = 'feedback-panel ' + (correct?'ok':'bad');
+  panel.innerHTML = `
+    <div class="fb-title">${correct? '✅ Mandou bem!' : '❌ Quase lá!'}</div>
+    ${correct? `<div class="fb-sub">+10 XP</div>` : `<div class="fb-sub">${customSubtitle || 'Sem problema, o importante é continuar aprendendo.'}</div>`}
+    <button class="btn ${correct?'':'red'}" style="width:100%;" onclick="nextQuestion()">CONTINUAR</button>
+  `;
+  footer.innerHTML='';
+  footer.appendChild(panel);
+  requestAnimationFrame(()=>panel.classList.add('show'));
+}
+
+function nextQuestion(){
+  const lesson = state.currentLesson;
+  if(state.hearts<=0){ finishLesson(false); return; }
+  state.qIndex++;
+  if(state.qIndex >= lesson.questions.length){ finishLesson(true); }
+  else { renderQuestion(); }
+}
+
+async function finishLesson(success){
+  document.getElementById('progress-fill').style.width='100%';
+  if(success){
+    state.progress[state.currentLesson.id] = true;
+    document.getElementById('result-title').textContent = 'Lição concluída! 🎉';
+    document.getElementById('result-detail').textContent = `Você acertou ${state.lessonCorrect} de ${state.currentLesson.questions.length} perguntas.`;
+  } else {
+    document.getElementById('result-title').textContent = 'Sem corações! 💔';
+    document.getElementById('result-detail').textContent = 'Sem problema, tente essa lição de novo.';
+  }
+  document.getElementById('result-xp').textContent = state.lessonCorrect*10;
+  await saveProgress();
+  goTo('screen-result');
+}
+
+function backToMap(){ goTo('screen-map'); }
+
+function launchConfetti(){
+  const colors = ['#58CC02','#1CB0F6','#FFC800','#CE82FF','#FF4B4B'];
+  for(let i=0;i<24;i++){
+    const el = document.createElement('div');
+    el.className='confetti-piece';
+    el.style.left = Math.random()*100+'%';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDelay = (Math.random()*0.3)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1600);
+  }
+}
+
+loadProgress();
+</script>
+</body>
+</html>
