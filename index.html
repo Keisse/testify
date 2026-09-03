@@ -214,6 +214,7 @@ button{ font-family:inherit; cursor:pointer; }
 
 /* RESULT */
 #screen-result{ align-items:center; text-align:center; justify-content:center; gap:8px; }
+.xp-max{ font-size:14px; font-weight:700; opacity:.65; }
 .xp-badge{ font-family:'Baloo 2'; font-size:44px; color:var(--gold-dark); font-weight:800; }
 .result-emoji{ font-size:56px; }
 
@@ -269,11 +270,11 @@ button{ font-family:inherit; cursor:pointer; }
   <!-- MAP -->
   <div class="screen" id="screen-map">
     <div class="map-header">
-      <div class="stat-pill">🏆 <span id="xp-total">0</span> XP</div>
-      <div class="stat-pill">🔥 <span id="streak-total">0</span></div>
+      <div class="stat-pill" title="Máximo possível: 1.800 XP. Revisões não geram XP.">🏆 <span id="xp-total">0</span> <span class="xp-max">/ 1.800 XP</span></div>
+      <div class="stat-pill">📚 <span id="lessons-total">0</span></div>
     </div>
     <h2>Módulo 2A — História da Igreja</h2>
-    <p class="map-intro">Estude o livro RhemaBrasil (páginas 283–379) em forma de trilha, igual a um joguinho. Toque em qualquer lição para começar — você escolhe a que quiser, sem precisar seguir uma ordem. As douradas (⭐) já foram concluídas e podem ser revisadas à vontade, sem risco de ficar sem corações.</p>
+    <p class="map-intro">Estude a matéria de História da Igreja (páginas 283 a 379 do livro atual) em forma de trilha, igual a um joguinho. Toque em qualquer lição para começar: você escolhe a que quiser, sem precisar seguir uma ordem. As douradas (⭐) já foram concluídas e podem ser revisadas à vontade.</p>
     <div class="trail" id="trail"></div>
   </div>
 
@@ -707,7 +708,8 @@ function enhancePhoneInputs(){
 }
 
 /* ================= ESTADO ================= */
-let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{}, isReview:false, user:null };
+const MAX_XP = 1800;
+let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{}, xpEarned:{}, isReview:false, user:null };
 const WRONG_PHRASES = [
   'Calma, {primeiroNome}! Você está aprendendo. 💚',
   'Quase, {primeiroNome}! Essa passou perto.',
@@ -742,11 +744,22 @@ function currentUser(){
   return users[phone] || null;
 }
 
+function awardQuestionXP(){
+  if(state.isReview || !state.currentLesson) return false;
+  const key = `${state.currentLesson.id}:${state.qIndex}`;
+  if(state.xpEarned[key]) return false;
+  if(state.xp >= MAX_XP) return false;
+  state.xp = Math.min(MAX_XP, state.xp + 10);
+  state.xpEarned[key] = true;
+  return true;
+}
+
 function applyUser(user){
   state.user = user;
-  state.xp = user.xp || 0;
+  state.xp = Math.min(MAX_XP, user.xp || 0);
   state.streak = user.streak || 0;
   state.progress = user.progress || {};
+  state.xpEarned = user.xpEarned || {};
 }
 
 function beginApp(){
@@ -768,7 +781,7 @@ function saveIdentification(){
   const phone = normalizePhone(phoneEl.value);
   errorEl.textContent = '';
   if(!name){ errorEl.textContent = 'Digite como você quer ser chamado.'; nameEl.focus(); return; }
-  if(phone.length < 10){ errorEl.textContent = 'Digite um telefone válido.'; phoneEl.focus(); return; }
+  if(phone.length < 10){ errorEl.textContent = 'Prove que você não é um robô, informe o telefone.'; phoneEl.focus(); return; }
 
   const users = readUsers();
   const existing = users[phone];
@@ -784,7 +797,8 @@ function saveIdentification(){
     lastAccessAt: new Date().toISOString(),
     xp:0,
     streak:0,
-    progress:{}
+    progress:{},
+    xpEarned:{}
   };
   users[phone] = user;
   if(!writeUsers(users)){ errorEl.textContent='Não foi possível salvar seus dados neste dispositivo.'; return; }
@@ -808,9 +822,10 @@ function saveProgress(){
     ...users[phone],
     name: state.user.name,
     phone,
-    xp: state.xp,
+    xp: Math.min(MAX_XP, state.xp),
     streak: state.streak,
     progress: state.progress,
+    xpEarned: state.xpEarned,
     lastAccessAt: new Date().toISOString()
   };
   writeUsers(users);
@@ -876,8 +891,9 @@ function paradiseMonumentSVG(){
 }
 
 function renderMap(){
-  document.getElementById('xp-total').textContent = state.xp;
-  document.getElementById('streak-total').textContent = state.streak;
+  document.getElementById('xp-total').textContent = Math.min(MAX_XP, state.xp);
+  const completedLessons = Object.values(state.progress || {}).filter(Boolean).length;
+  document.getElementById('lessons-total').textContent = completedLessons;
   const mapHeading = document.querySelector('#screen-map h2');
   if(mapHeading && state.user){ mapHeading.textContent = `Olá, ${firstName(state.user.name)}!`; }
   const trail = document.getElementById('trail');
@@ -1333,7 +1349,7 @@ function finalizeMatchAll(q){
     document.getElementById('mr-'+ri).classList.add(ok?'matched':'wrong');
   });
   const overallCorrect = correctCount === q.pairs.length;
-  if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  if(overallCorrect){ state.lessonCorrect++; state.streak++; awardQuestionXP(); launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.pairs.map(p=>p[0]+' → '+p[1]).join('<br>')); }
   renderHearts();
   saveProgress();
@@ -1369,7 +1385,7 @@ function finalizeMatch3(q){
     ['m3a-'+i, 'm3b-'+bi, 'm3c-'+ci].forEach(id=>{ const el=document.getElementById(id); el.classList.remove('paired'); el.classList.add(ok?'matched':'wrong'); });
   });
   const overallCorrect = correctCount === q.rows.length;
-  if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  if(overallCorrect){ state.lessonCorrect++; state.streak++; awardQuestionXP(); launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.rows.map(r=>r[0]+' → '+r[1]+' → '+r[2]).join('<br>')); }
   renderHearts();
   saveProgress();
@@ -1390,7 +1406,7 @@ function flipMemoryCard(q, cardId, pid, txt, el){
       q._matchedPairs.add(a.pid);
       q._flipped = [];
       if(q._matchedPairs.size === q.pairs.length){
-        state.answered = true; state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); renderHearts(); saveProgress();
+        state.answered = true; state.lessonCorrect++; state.streak++; awardQuestionXP(); launchConfetti(); renderHearts(); saveProgress();
         renderFeedbackPanel(true);
       }
     } else {
@@ -1442,7 +1458,7 @@ function advanceFalling(q){
 function finalizeFalling(q){
   state.answered = true;
   const overallCorrect = (q._caught === q._totalCorrect) && (q._mistakes===0);
-  if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  if(overallCorrect){ state.lessonCorrect++; state.streak++; awardQuestionXP(); launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.correct.join(', ')); }
   renderHearts();
   saveProgress();
@@ -1480,7 +1496,7 @@ function finalizeTimelineDates(q){
 }
 
 function showFeedback(correct){
-  if(correct){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  if(correct){ state.lessonCorrect++; state.streak++; awardQuestionXP(); launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); }
   renderHearts();
   saveProgress();
@@ -1492,7 +1508,7 @@ function renderFeedbackPanel(correct, customSubtitle){
   const panel = document.createElement('div');
   panel.className = 'feedback-panel ' + (correct?'ok':'bad');
   let subtitleHtml = '';
-  if(correct){ subtitleHtml = '<div class="fb-sub">+10 XP</div>'; }
+  if(correct){ subtitleHtml = `<div class="fb-sub">${state.isReview ? 'Revisão concluída' : '+10 XP'}</div>`; }
   else { const nome = firstName(state.user?.name); const phrase = WRONG_PHRASES[wrongPhraseIndex % WRONG_PHRASES.length].replaceAll('{primeiroNome}', nome); subtitleHtml = `<div class="fb-title">${phrase}</div>`; wrongPhraseIndex++; }
   panel.innerHTML = `
     ${correct? `<div class="fb-title">✅ Mandou bem!</div>` : ''}
@@ -1522,7 +1538,7 @@ async function finishLesson(success){
     document.getElementById('result-title').textContent = 'Sem corações! 💔';
     document.getElementById('result-detail').textContent = 'Sem problema, tente essa lição de novo.';
   }
-  document.getElementById('result-xp').textContent = state.lessonCorrect*10;
+  document.getElementById('result-xp').textContent = state.isReview ? 0 : state.lessonCorrect*10;
   await saveProgress();
   goTo('screen-result');
 }
