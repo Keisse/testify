@@ -268,7 +268,7 @@ const LESSONS = [
     {type:'select', prompt:'Segundo a Nota do Editor, como o material trata as divergências de datação?', text:'"Nos casos de divergências nas datações por parte de alguns autores, adotaremos o critério da observação de convergências, dialogando as datações mais aproximadas do ponto de vista histórico e teológico."', options:['Adota o critério de observar as convergências entre os autores','Ignora todas as datas por completo','Segue sempre um único autor sem checar outros','Considera que datas não têm importância nenhuma'], correct:0},
     {type:'fill', prompt:'Complete:', text:'Segundo Efésios 1:22-23, a Igreja é chamada de {blank} de Cristo.', answer:'corpo', options:['corpo','noiva','templo','família']},
     {type:'word', prompt:'Complete o nome do teólogo:', word:'AGOSTINHO', hint:'Destacou-se fazendo uma interpretação teológica da História — no grego, *teos* (Deus) + *logia* (estudo).'},
-    {type:'select', prompt:'Segundo 1 Coríntios 10:32, para quem os cristãos não devem se tornar causa de tropeço?', text:'"Não vos torneis causa de tropeço nem para JUDEUS, nem para GENTIOS, nem tampouco para a IGREJA DE DEUS."', options:['Judeus, gentios e a Igreja de Deus','Somente para os judeus','Somente para os romanos','Ninguém, pois isso não tem importância'], correct:0},
+    {type:'fill', prompt:'Complete a citação de 1 Coríntios 10:32:', text:'"Não vos torneis causa de tropeço nem para judeus, nem para gentios, nem tampouco para a {blank}."', answer:'Igreja de Deus', options:['Igreja de Deus','Igreja Católica','Casa de Oração','Congregação Local']},
     {type:'match', prompt:'Associe cada termo da periodização:', pairs:[
       ['a.C.','Antes de Cristo, em ordem decrescente'],
       ['d.C.','Depois de Cristo, em ordem crescente'],
@@ -312,7 +312,7 @@ const LESSONS = [
     ]},
     {type:'word', prompt:'Complete o formulador do Estoicismo:', word:'ZENAO', hint:'Ensinava que todas as coisas emanavam de Deus, inclusive o bem e o mal.'},
     {type:'word', prompt:'Complete o formulador do Epicurismo:', word:'EPICURO', hint:'Deísta — cria em deus(es), mas sem compromisso com o homem; não cria na vida além-túmulo.'},
-    {type:'select', prompt:'O que foi a "Pax Romana"?', text:'"A unificação dos povos: nas áreas em que Roma exercia seu domínio, os povos eram unidos e as fronteiras eram abertas."', options:['Um tratado só com a Grécia','Unificação dos povos sob domínio de Roma, com fronteiras abertas','Uma guerra civil romana','O nome do exército de Roma'], correct:1},
+    {type:'fill', prompt:'Complete:', text:'A Pax Romana foi a {blank} dos povos sob o domínio de Roma, com fronteiras abertas.', answer:'unificação', options:['unificação','separação','tributação','conquista']},
     {type:'order', prompt:'Ordene a evolução dos materiais de escrita:', pieces:['Rolos de papiro','Pergaminho (mais contemporâneo ao Novo Testamento)','Papel (inventado pelos chineses no séc. II)','Prensa móvel de Gutenberg (1400-1468)']},
     {type:'fill', prompt:'Complete:', text:'A palavra "Bíblia" vem do grego e significa {blank}.', answer:'coleção de livros pequenos', options:['coleção de livros pequenos','testemunho ocular','revelação divina','vara de medir']},
     {type:'fill', prompt:'Complete:', text:'O Novo Testamento foi originalmente escrito em {blank}, língua universal da época apesar de os romanos falarem latim.', answer:'grego', options:['grego','latim','hebraico','aramaico']},
@@ -351,7 +351,7 @@ const LESSONS = [
     {type:'select', prompt:'Segundo "O Livro dos Mártires", o que André disse ao ver a cruz preparada para seu martírio?', text:'"Ó cruz, extremamente bem-vinda e tão longamente esperada! De boa vontade, cheio de alegria e desejo, eu venho a ti."', options:['Recebeu a cruz com alegria, dizendo que era bem-vinda e esperada','Pediu clemência ao imperador','Negou a fé para escapar da morte','Ficou em silêncio até o fim'], correct:0},
     {type:'word', prompt:'Complete o nome deste Pai da Igreja:', word:'POLICARPO', hint:'Discípulo de João, bispo de Esmirna; recusou-se a negar a Cristo e foi queimado vivo.'},
     {type:'fill', prompt:'Complete a frase de Policarpo ao procônsul:', text:'"Há oitenta e seis anos eu O sirvo, e Ele nunca me {blank}."', answer:'faltou', options:['faltou','abandonou','decepcionou','esqueceu']},
-    {type:'select', prompt:'O que Pápias afirmava sobre o Evangelho de Marcos?', text:'"Ele afirmava que o Evangelho de Marcos se baseava nas palavras de Pedro."', options:['Que se baseava nas palavras de Pedro','Que foi escrito por Paulo','Que era uma cópia do Evangelho de João','Que não deveria ser considerado inspirado'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Pápias afirmava que o Evangelho de Marcos se baseava nas palavras de {blank}.', answer:'Pedro', options:['Pedro','Paulo','João','Tiago']},
     {type:'fill', prompt:'Complete:', text:'Os Evangelhos de Mateus, Marcos e Lucas são conhecidos como Evangelhos {blank}, por seu paralelismo textual.', answer:'sinóticos', options:['sinóticos','apócrifos','pastorais','patrísticos']},
     {type:'match', prompt:'Associe cada apologista à sua obra ou marca:', pairs:[
       ['Justino','Escreveu "Apologia" e "Diálogo com Trifon"'],
@@ -366,7 +366,7 @@ const LESSONS = [
 {
   id:'l6', title:'Causas e Fases da Perseguição', pages:'307-310',
   questions:[
-    {type:'select', prompt:'O que provocava as perseguições contra a Igreja até por volta de 64 d.C., segundo o texto?', text:'"As perseguições contra a Igreja, até por volta do ano 64 d.C., eram provocadas pelos judeus, geralmente fanáticos, com o apoio das autoridades locais."', options:['Judeus fanáticos, com apoio das autoridades locais','O próprio Império Romano, desde o início','Apenas rivalidades entre os próprios apóstolos','Comerciantes gregos insatisfeitos'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Até 64 d.C., as perseguições contra a Igreja eram provocadas por {blank} fanáticos, com apoio das autoridades locais.', answer:'judeus', options:['judeus','romanos','gregos','egípcios']},
     {type:'match', prompt:'Associe cada causa da perseguição à sua explicação:', pairs:[
       ['Monoteísmo Radical','O cristianismo rejeitava qualquer adoração fora do próprio Deus'],
       ['Adoração ao Imperador','Recusar-se a isso era visto como prova de deslealdade ao Estado'],
@@ -381,9 +381,9 @@ const LESSONS = [
     ]},
     {type:'timeline_periods', prompt:'Arraste cada imperador para a ordem cronológica certa de suas perseguições:', items:['Nero','Domiciano','Marco Aurélio','Septímio Severo','Décio e Valeriano','Diocleciano']},
     {type:'word', prompt:'Complete o nome deste governador romano:', word:'PLINIO', hint:'Escreveu uma carta ao imperador Trajano relatando que os cristãos apenas cantavam hinos e seguiam as leis, sem cometer crimes.'},
-    {type:'select', prompt:'O que caracterizou o período de Trajano até Antonino Pio, segundo o texto?', text:'"O cristianismo não foi reconhecido, mas também não foi perseguido de modo severo."', options:['O cristianismo não era reconhecido, mas também não era perseguido severamente','O cristianismo se tornou a religião oficial de Roma','Foi o período de perseguição mais violenta de todas','Os cristãos foram todos expulsos de Roma'], correct:0},
+    {type:'order', prompt:'Ordene estes "bons imperadores" cronologicamente:', pieces:['Nerva (96-98 d.C.)','Trajano (98-117 d.C.)','Adriano (117-138 d.C.)','Antonino Pio (138-161 d.C.)']},
     {type:'fill', prompt:'Complete a frase de Cipriano sobre a perseguição de Décio:', text:'"O mundo inteiro está {blank}."', answer:'devastado', options:['devastado','arruinado','perdido','condenado']},
-    {type:'select', prompt:'O que Diocleciano determinou durante sua perseguição?', text:'"Determinou que todas as Bíblias fossem queimadas e todos os templos fossem destruídos, e exigiu que os cristãos renunciassem ao cristianismo e à fé."', options:['Que as Bíblias fossem queimadas e os templos destruídos','Que os cristãos recebessem mais liberdade religiosa','Que os templos cristãos fossem multiplicados','Que apenas os bispos fossem perseguidos'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Diocleciano determinou que todas as {blank} fossem queimadas e todos os templos fossem destruídos.', answer:'Bíblias', options:['Bíblias','sinagogas','estátuas','moedas']},
     {type:'order', prompt:'Ordene a sequência sobre o martírio de Perpétua e Felicitas:', pieces:['Perpétua, nobre mulher de Cartago','e Felicitas, sua fiel escrava','foram despedaçadas pelas feras no ano 203']},
   ]
 },
@@ -395,7 +395,7 @@ const LESSONS = [
     {type:'order', prompt:'Ordene a sequência sobre a ascensão de Constantino:', pieces:['Após a renúncia de Diocleciano, quatro aspirantes à coroa estavam em guerra','os dois rivais mais poderosos eram Maxêncio e Constantino','Constantino venceu, e Maxêncio morreu afogado no rio Tibre']},
     {type:'word', prompt:'Complete o nome deste Concílio, convocado pelo próprio imperador em 325 d.C.:', word:'NICEIA', hint:'Neste Concílio foi repudiado o arianismo, que afirmava que Jesus era um deus menor, inferior ao Pai.'},
     {type:'fill', prompt:'Complete:', text:'Em 380 d.C., o imperador {blank} decretou o Cristianismo Ortodoxo como religião oficial do Império Romano.', answer:'Teodósio', options:['Teodósio','Constantino','Diocleciano','Galério']},
-    {type:'select', prompt:'Segundo o escritor Eddie Hyatt, o que aconteceu na Igreja após a oficialização do Cristianismo?', text:'"Como resultado, hordas de pagãos não convertidos encheram as igrejas, trazendo com eles ideias e práticas pagãs."', options:['Hordas de pagãos não convertidos encheram as igrejas','Todos os pagãos se converteram sinceramente','A Igreja se tornou menor e mais pura','O paganismo foi completamente extinto'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Segundo Eddie Hyatt, hordas de {blank} não convertidos encheram as igrejas depois da oficialização do Cristianismo.', answer:'pagãos', options:['pagãos','judeus','escravos','soldados']},
     {type:'fill', prompt:'Complete:', text:'O cânon do Novo Testamento foi oficialmente fixado no III Concílio de Cartago, em {blank} d.C.', answer:'397', options:['397','325','381','313']},
     {type:'timeline_dates', prompt:'Arraste o ano certo para cada Concílio:', items:[
       {label:'Concílio de Nicéia (repudiou o arianismo)', date:'325'},
@@ -409,17 +409,17 @@ const LESSONS = [
       ['Adocionismo','Jesus era homem comum que recebeu poder no batismo'],
       ['Sabelianismo','Pai, Filho e Espírito Santo são uma pessoa com máscaras diferentes'],
     ]},
-    {type:'select', prompt:'O que o 3º Concílio de Constantinopla (680/681 d.C.) definiu?', text:'"Doutrina das duas vontades de Cristo."', options:['A doutrina das duas vontades de Cristo','A doutrina da Trindade','O cânon do Antigo Testamento','A data da Páscoa'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O 3º Concílio de Constantinopla (680/681 d.C.) definiu a doutrina das duas {blank} de Cristo.', answer:'vontades', options:['vontades','naturezas','pessoas','substâncias']},
   ]
 },
 {
   id:'l8', title:'Os Monges e o Poder Papal', pages:'317-320',
   questions:[
-    {type:'select', prompt:'O que o Concílio Vaticano I (1869-1870) declarou?', text:'"Declarada a infalibilidade do papa, ensinando que aquilo que o papa fala sobre questões doutrinais ou éticas, como chefe da Igreja, é infalível e deve ser obedecido pelos fiéis."', options:['A infalibilidade do papa em questões doutrinais e éticas','O fim do celibato sacerdotal','A tradução da Bíblia para o latim','A criação da Igreja Ortodoxa'], correct:0},
+    {type:'order', prompt:'Ordene estes Concílios cronologicamente:', pieces:['Concílio de Trento (1545)','Concílio Vaticano I (1869-1870)','Concílio Vaticano II (1962-1965)']},
     {type:'fill', prompt:'Complete:', text:'O movimento monástico foi fundado por {blank}, em 320 d.C., no Egito.', answer:'Antão', options:['Antão','Bento','Simeão','Agostinho']},
     {type:'order', prompt:'Ordene a sequência sobre Simeão Estilista:', pieces:['Simeão Estilista foi o iniciador dos "santos das colunas"','viveu 37 anos na Síria','em uma coluna que possuía 18 metros de altura']},
     {type:'word', prompt:'Complete o nome desta ordem monástica europeia:', word:'BENEDITINOS', hint:'A mais conhecida ordem de mosteiros da Europa, fundada por São Bento.'},
-    {type:'select', prompt:'Quando o termo "católico" passou a significar a supremacia da Igreja de Roma com poder político, segundo o texto?', text:'"A partir do século V — com a queda do Império Romano do Ocidente —, os moldes de Igreja Católica Apostólica Romana com poder temporal (político)."', options:['A partir do século V, com a queda do Império Romano do Ocidente','Ainda no século I, com os apóstolos','No século XVI, com a Reforma','Somente no século XX'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O termo "católico" passou a significar supremacia com poder político a partir do século {blank}, com a queda do Império Romano do Ocidente.', answer:'V', options:['V','I','X','XV']},
     {type:'match', prompt:'Associe cada fator ao seu efeito na consolidação do papado:', pairs:[
       ['Declínio político do Império','Cedeu espaço ao núcleo religioso-político em Roma'],
       ['Divisão do Império em 395','Criou rivalidade entre Roma e Constantinopla'],
@@ -438,7 +438,7 @@ const LESSONS = [
     {type:'select', prompt:'Segundo o texto, quanto tempo durou a Idade Média?', text:'"A Idade Média... compreendendo, então, cerca de mil anos desde a queda de Roma (476 d.C.) até a queda de Constantinopla (1453 d.C.)."', options:['Cerca de mil anos, entre 476 e 1453','Apenas 100 anos','Cerca de 300 anos','Mais de 2000 anos'], correct:0},
     {type:'fill', prompt:'Complete:', text:'A "Falsa Doação de Constantino" alegava que o imperador havia dado ao bispo de Roma autoridade suprema sobre todas as {blank} do Império.', answer:'províncias', options:['províncias','riquezas','igrejas','terras']},
     {type:'word', prompt:'Complete o nome de família deste papa:', word:'HILDEBRANDO', hint:'Nome de família do Papa Gregório VII, que exigiu o celibato dos sacerdotes e a supremacia da Igreja sobre o Estado.'},
-    {type:'select', prompt:'O que Inocêncio III (1198-1216) afirmava sobre a posição do papa?', text:'"Afirmou que o papa ocupa uma posição entre Deus e o homem. É inferior a Deus, porém superior ao homem, sendo juiz de todos, mas não é julgado por ninguém."', options:['O papa é inferior a Deus, mas superior ao homem, e não é julgado por ninguém','O papa é igual a Deus em todos os aspectos','O papa deve se submeter aos reis europeus','O papa não tem nenhuma autoridade especial'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Inocêncio III afirmava que o papa é inferior a Deus, porém superior ao {blank}.', answer:'homem', options:['homem','imperador','clero','Estado']},
     {type:'fill', prompt:'Complete:', text:'O Período de Decadência do poder papal culminou no chamado "Cativeiro {blank}" (1305-1377).', answer:'Babilônico', options:['Babilônico','Romano','Francês','Papal']},
     {type:'memory', prompt:'Encontre os pares: termo do Cisma e seu significado', pairs:[
       ['Filioque','Cláusula do Credo condenada como herética pelo patriarca Fócio'],
@@ -454,9 +454,9 @@ const LESSONS = [
 {
   id:'l10', title:'Inquisição, Cruzadas e Fim da Idade Média', pages:'329-331',
   questions:[
-    {type:'select', prompt:'Segundo o texto, qual era a missão dos Tribunais da Inquisição?', text:'"Foram fundados, então, os Tribunais da Inquisição, cuja missão era inquirir e julgar os heréticos."', options:['Inquirir e julgar os heréticos','Traduzir a Bíblia para as línguas locais','Organizar as Cruzadas','Administrar os mosteiros europeus'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A missão dos Tribunais da Inquisição era inquirir e julgar os {blank}.', answer:'heréticos', options:['heréticos','pagãos','protestantes','cismáticos']},
     {type:'fill', prompt:'Complete:', text:'Em 1233, o Papa {blank} comissionou os dominicanos para punir a heresia.', answer:'Gregório IX', options:['Gregório IX','Inocêncio III','Urbano II','Leão IX']},
-    {type:'select', prompt:'Qual foi o apelo do Papa Urbano II em 1096, dando início às Cruzadas?', text:'"Faz um apelo aos nobres europeus para a libertação da Palestina ocupada pelos muçulmanos."', options:['A libertação da Palestina, ocupada pelos muçulmanos','A construção de uma nova catedral em Roma','O fim do celibato sacerdotal','A tradução da Bíblia para o latim'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Em 1096, o Papa Urbano II apelou pela libertação da {blank}, ocupada pelos muçulmanos.', answer:'Palestina', options:['Palestina','Espanha','Sicília','Constantinopla']},
     {type:'timeline_dates', prompt:'Arraste o ano certo para cada Cruzada:', items:[
       {label:'Primeira Cruzada (Godofredo de Bouillón)', date:'1095'},
       {label:'Quarta Cruzada (tomada de Constantinopla)', date:'1201'},
@@ -464,7 +464,7 @@ const LESSONS = [
       {label:'Sétima Cruzada (Luís IX)', date:'1270'},
     ]},
     {type:'word', prompt:'Complete o nome desta cidade:', word:'VENEZA', hint:'Seus mercadores financiaram a Quarta Cruzada, a primeira cruzada marítima, monopolizando o comércio com Constantinopla.'},
-    {type:'select', prompt:'Segundo o texto, por que as Cruzadas fracassaram?', text:'"As cruzadas fracassaram devido às discórdias entre os chefes, que estavam mais preocupados com os interesses próprios do que com a causa comum."', options:['Discórdias entre os chefes, mais preocupados com interesses próprios','Falta de soldados disponíveis na Europa','Os muçulmanos aceitaram negociar a paz logo no início','O papa cancelou todas as expedições'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'As Cruzadas fracassaram devido às {blank} entre os chefes, mais preocupados com interesses próprios.', answer:'discórdias', options:['discórdias','alianças','traições','reconciliações']},
     {type:'fill', prompt:'Complete:', text:'O Canto {blank} foi introduzido na Igreja Medieval por Gregório Magno.', answer:'Gregoriano', options:['Gregoriano','Ambrosiano','Litúrgico','Sacro']},
     {type:'match', prompt:'Associe cada prática da Igreja Medieval à sua descrição:', pairs:[
       ['Venda de indulgências','Perdão dos pecados mediante pagamento'],
@@ -487,9 +487,9 @@ const LESSONS = [
       ['Direito de Espólio','Propriedade pessoal do alto clero, passada ao papa após sua morte'],
       ['Dinheiro de Pedro','Quantia paga pelos leigos em muitas regiões'],
     ]},
-    {type:'select', prompt:'Segundo Carter Lindberg, como o poeta Petrarca descreveu a corte papal em Avinhão?', text:'"Descreveu a luxúria e o mundanismo da corte papal como \'o esgoto do mundo\'."', options:['Como "o esgoto do mundo"','Como um exemplo de santidade','Como um modelo de simplicidade','Como um lugar de pobreza extrema'], correct:0},
+    {type:'fill', prompt:'Complete a frase de Petrarca sobre a corte papal em Avinhão:', text:'"...como o {blank} do mundo."', answer:'esgoto', options:['esgoto','centro','coração','templo']},
     {type:'fill', prompt:'Complete:', text:'Os Valdenses foram excomungados em {blank}, por contestarem os costumes e as doutrinas da Igreja.', answer:'1184', options:['1184','1170','1215','1054']},
-    {type:'select', prompt:'Qual foi o principal feito de John Wycliffe?', text:'"Seu maior feito foi traduzir a Bíblia para o inglês — o Novo Testamento, em 1380, e o Antigo Testamento, em 1384."', options:['Traduzir a Bíblia para o inglês','Fundar a Universidade de Oxford','Convocar o Concílio de Constança','Escrever as 95 teses'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O maior feito de Wycliffe foi traduzir a Bíblia para o {blank}.', answer:'inglês', options:['inglês','alemão','francês','latim']},
     {type:'order', prompt:'Ordene a sequência sobre o martírio de John Huss:', pieces:['John Huss foi convencido a ir ao Concílio de Constança, com um salvo-conduto','porém, ao chegar lá, foi traído','sendo condenado e queimado em 1415']},
     {type:'fill', prompt:'Complete a oração final de William Tyndale antes de morrer na estaca:', text:'"Senhor, abra os olhos do {blank} da Inglaterra."', answer:'rei', options:['rei','povo','clero','papa']},
   ]
@@ -498,7 +498,7 @@ const LESSONS = [
   id:'l12', title:'Martinho Lutero', pages:'337-343',
   questions:[
     {type:'fill', prompt:'Complete:', text:'Em 1453, Constantinopla foi tomada pelos turcos sob as ordens de {blank}.', answer:'Maomé II', options:['Maomé II','Maomé I','Solimão','Amurate']},
-    {type:'select', prompt:'Quais foram os principais temas defendidos durante a Reforma (1453-1648), segundo o texto?', text:'"Autoridade das Escrituras; Salvação pela graça e justificação pela fé; Jesus Cristo como único mediador... Governo da igreja, relação Igreja e Estado; Conhecimento de Deus."', options:['Autoridade das Escrituras, salvação pela graça e pela fé, e Cristo como único mediador','A autoridade suprema do papa sobre as Escrituras','A tradição oral como única fonte de fé','A submissão total ao Sacro Império Romano'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Entre os temas defendidos durante a Reforma estava a salvação pela graça e a justificação pela {blank}.', answer:'fé', options:['fé','obras','tradição','hierarquia']},
     {type:'fill', prompt:'Complete a frase de John Huss antes de ser queimado:', text:'"Podem matar o ganso, mas daqui a cem anos surgirá um {blank} que não poderão queimar."', answer:'cisne', options:['cisne','fênix','leão','águia']},
     {type:'word', prompt:'Complete o nome desta cidade alemã:', word:'WITTENBERG', hint:'Cidade onde Lutero se tornou professor da Universidade em 1508, e onde pregou as 95 teses.'},
     {type:'match', prompt:'Associe cada "Sola" da Reforma ao seu significado:', pairs:[
@@ -517,14 +517,14 @@ const LESSONS = [
   id:'l13', title:'Zuínglio e Calvino', pages:'344-349',
   questions:[
     {type:'fill', prompt:'Complete:', text:'Ulrico Zuínglio nasceu em 1º de janeiro de 1484, dois meses depois de {blank}.', answer:'Lutero', options:['Lutero','Calvino','Erasmo','Melanchton']},
-    {type:'select', prompt:'O que motivou Zuínglio a atacar a Igreja em 1517?', text:'"Contrariado com a peregrinação de fiéis em busca de \'remissão de pecados\' à Virgem em Einsiedeln, ele atacou a Igreja."', options:['A peregrinação de fiéis em busca de "remissão de pecados"','A criação da Universidade de Basileia','A tradução da Bíblia para o alemão','O casamento de Lutero com Catarina Von Bora'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Zuínglio atacou a Igreja por causa da peregrinação de fiéis em busca de "remissão de {blank}" em Einsiedeln.', answer:'pecados', options:['pecados','indulgências','relíquias','bênçãos']},
     {type:'fill', prompt:'Complete:', text:'Os "{blank} artigos de fé" de Zuínglio, redigidos em 1523, são considerados a primeira confissão protestante.', answer:'67', options:['67','95','39','25']},
     {type:'select', prompt:'Como Zuínglio morreu, segundo o texto?', text:'"Devido a uma guerra civil contra católicos, Zuínglio morreu em 1531 no campo de guerra."', options:['Morreu em 1531, no campo de guerra, numa guerra civil contra católicos','Morreu queimado, condenado pela Inquisição','Morreu de causas naturais, em Genebra','Foi decapitado por ordem do papa'], correct:0},
     {type:'word', prompt:'Complete o nome desta cidade francesa:', word:'NOYON', hint:'Cidade rural da França onde João Calvino nasceu, em 1509.'},
     {type:'fill', prompt:'Complete:', text:'Em Basileia, na Suíça, Calvino começou a escrever sua obra-prima, {blank}.', answer:'As Institutas da Religião Cristã', options:['As Institutas da Religião Cristã','A Cidade de Deus','Contra Heresias','A Vulgata Latina']},
     {type:'timeline_periods', prompt:'Arraste os marcos da vida de Calvino para a ordem cronológica certa:', items:['Nascimento em Noyon (1509)','Conversão e fuga da França (1533-1534)','Basileia: escreve As Institutas (1534)','Chega a Genebra a convite de Farel (1536)','Exílio em Estrasburgo (1538-1541)','Retorno definitivo a Genebra (1541)']},
     {type:'fill', prompt:'Complete:', text:'Em 1559, Calvino cumpriu um grande sonho seu: a fundação da {blank} de Genebra.', answer:'Academia', options:['Academia','Universidade','Catedral','Biblioteca']},
-    {type:'select', prompt:'O que John Knox disse sobre a escola de Genebra?', text:'"A mais perfeita escola de Cristo desde os dias dos apóstolos."', options:['Que era a mais perfeita escola de Cristo desde os apóstolos','Que era inferior às universidades católicas','Que deveria ser fechada imediatamente','Que só ensinava latim e retórica'], correct:0},
+    {type:'fill', prompt:'Complete a frase de John Knox sobre Genebra:', text:'"A mais perfeita {blank} de Cristo desde os dias dos apóstolos."', answer:'escola', options:['escola','igreja','cidade','universidade']},
     {type:'order', prompt:'Ordene a sequência sobre a morte de Calvino:', pieces:['Em 1564, João Calvino morreu','aos 54 anos','depois de anos de trabalho incansável em Genebra']},
   ]
 },
@@ -538,7 +538,7 @@ const LESSONS = [
       {label:'Reinado de Elizabeth I', date:'1558'},
     ]},
     {type:'fill', prompt:'Complete:', text:'Em 1534, o Parlamento inglês votou o Ato de {blank}, considerando Henrique VIII o chefe supremo da Igreja Anglicana.', answer:'Supremacia', options:['Supremacia','Tolerância','Independência','Reforma']},
-    {type:'select', prompt:'Quem resistiu ao Ato de Supremacia e foi decapitado, segundo o texto?', text:'"Houve pouca resistência; entre os que resistiram, estava Thomas Morus, que foi decapitado."', options:['Thomas Morus','Thomas Cranmer','John Knox','William Tyndale'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Entre os que resistiram ao Ato de Supremacia estava {blank}, que foi decapitado.', answer:'Thomas Morus', options:['Thomas Morus','Thomas Cranmer','John Knox','William Tyndale']},
     {type:'fill', prompt:'Complete:', text:'Por perseguir e executar protestantes, a Rainha Maria I ficou conhecida como Maria, a {blank}.', answer:'sanguinária', options:['sanguinária','piedosa','católica','justa']},
     {type:'word', prompt:'Complete o nome deste arcebispo:', word:'CRANMER', hint:'Responsável pela mente teológica e sistematizadora da Reforma inglesa; escreveu o primeiro Livro de Oração.'},
     {type:'fill', prompt:'Complete:', text:'Os "{blank} e Dois Artigos" de Cranmer serviram de fundamento aos "Trinta e Nove Artigos" que definiram a Igreja Anglicana.', answer:'Quarenta', options:['Quarenta','Trinta','Vinte','Cinquenta']},
@@ -564,9 +564,9 @@ const LESSONS = [
       ['Igreja Nacional','Defendia uma Igreja mundial única','Cada nação passou a ter sua própria Igreja'],
     ]},
     {type:'fill', prompt:'Complete:', text:'Em 1534, o militar espanhol {blank} fundou a Ordem dos Jesuítas, aprovada pelo papa em 1540.', answer:'Inácio de Loyola', options:['Inácio de Loyola','Tomás de Aquino','Francisco Xavier','Filipe Neri']},
-    {type:'select', prompt:'O que era o "Index Librorum Prohibitorum"?', text:'"Organizou uma lista de livros proibidos aos católicos: o Index Librorum Prohibitorum (Índice dos livros proibidos)."', options:['Uma lista de livros proibidos aos católicos','Uma lista de santos oficiais da Igreja','O nome do tribunal da Inquisição','O primeiro catálogo de indulgências'], correct:0},
+    {type:'order', prompt:'Ordene estes líderes da Contrarreforma cronologicamente:', pieces:['Papa Paulo III (1534-1549)','Papa Paulo IV (1555-1559)','Papa Pio V (1566-1572)','Papa Xisto V (1585-1590)']},
     {type:'fill', prompt:'Complete:', text:'A Guerra dos Trinta Anos começou em {blank}, cem anos após o início da Reforma.', answer:'1618', options:['1618','1517','1555','1648']},
-    {type:'select', prompt:'Como terminou a Guerra dos Trinta Anos, segundo o texto?', text:'"A guerra terminou com o Tratado de Vestfália, em 1648, na Suécia, após severas batalhas chefiadas por Gustavo Adolfo."', options:['Com o Tratado de Vestfália, em 1648','Com a vitória total dos católicos','Com a dissolução do Sacro Império Romano','Com a conversão de toda a Alemanha ao catolicismo'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A Guerra dos Trinta Anos terminou com o Tratado de {blank}, em 1648.', answer:'Vestfália', options:['Vestfália','Augsburgo','Utrecht','Versalhes']},
     {type:'falling', prompt:'Toque só nos grupos que vieram do Movimento Puritano inglês:', correct:['Presbiterianos','Congregacionais','Batistas'], distractors:['Jesuítas','Dominicanos']},
     {type:'fill', prompt:'Complete:', text:'Em 1604, na Holanda, {blank} liderou um movimento contrário à doutrina calvinista da predestinação.', answer:'Jacob Armínio', options:['Jacob Armínio','Menno Simons','Guillaume Farel','Teodoro de Beza']},
   ]
@@ -582,7 +582,7 @@ const LESSONS = [
     {type:'fill', prompt:'Complete:', text:'Villegagnon aportou na baía de Guanabara em {blank}, com o apoio do huguenote Gaspard de Coligny.', answer:'1555', options:['1555','1517','1620','1862']},
     {type:'select', prompt:'O que aconteceu com os missionários protestantes presos no Brasil?', text:'"Três foram mortos — sofreram estrangulamento e, ainda vivos, tendo as mãos e pés atados, foram lançados ao mar, na Baía de Guanabara."', options:['Foram estrangulados e lançados ao mar, ainda vivos e atados','Foram libertados sem punição','Fugiram para a Europa antes da condenação','Converteram Villegagnon ao protestantismo'], correct:0},
     {type:'fill', prompt:'Complete:', text:'Por causa dessa perseguição, Villegagnon ficou conhecido como "{blank} da América".', answer:'Caim', options:['Caim','Judas','Nero','Diocleciano']},
-    {type:'select', prompt:'Quando ocorreu a primeira conversão de um brasileiro à fé reformada, segundo o texto?', text:'"No dia 22 de junho de 1862, Serafim Pinto Ribeiro foi o primeiro brasileiro a se converter à fé reformada na Igreja Presbiteriana."', options:['Em 22 de junho de 1862','Em 1555, com Villegagnon','Em 1620, com os puritanos','Em 1906, na Rua Azusa'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A primeira conversão de um brasileiro à fé reformada ocorreu em {blank} de 1862.', answer:'22 de junho', options:['22 de junho','7 de setembro','25 de dezembro','1º de janeiro']},
     {type:'word', prompt:'Complete o nome dos seguidores do Movimento Wesleyano:', word:'METODISTAS', hint:'De confissão arminiana, com mais de 12 milhões de membros — a maior denominação norte-americana depois dos batistas.'},
     {type:'fill', prompt:'Complete:', text:'A Idade Contemporânea tem como marco histórico a Revolução Francesa, em {blank}.', answer:'1789', options:['1789','1618','1906','1517']},
     {type:'falling', prompt:'Toque só nos resultados do Avivamento Wesleyano, segundo o texto:', correct:['Escola Dominical','Movimento Missionário Moderno','Assistência Social'], distractors:['Inquisição','Concílio de Trento']},
@@ -593,9 +593,9 @@ const LESSONS = [
 {
   id:'l17', title:'Pentecostais no Brasil e os Avivamentos', pages:'366-372',
   questions:[
-    {type:'select', prompt:'Segundo Antônio Gouvêa Mendonça, o que ajudou o protestantismo brasileiro a manter certa unidade teológica?', text:'"A origem comum (EUA) da maioria das missões" e "a predominância do culto católico entre os brasileiros."', options:['A origem comum (EUA) das missões e a predominância do culto católico no Brasil','A ausência total de qualquer influência estrangeira','O apoio direto do governo brasileiro','A unificação com a Igreja Católica'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Segundo Antônio Gouvêa Mendonça, a origem comum (EUA) das missões e a predominância do culto {blank} entre os brasileiros ajudaram a manter certa unidade teológica.', answer:'católico', options:['católico','pentecostal','ortodoxo','anglicano']},
     {type:'fill', prompt:'Complete:', text:'Nas décadas de 30 e 40, surgiram os precursores do avivamento — Essek William Kenyon nos Estados Unidos e {blank} na Inglaterra.', answer:'Smith Wigglesworth', options:['Smith Wigglesworth','John Wesley','Charles Parham','William Seymour']},
-    {type:'select', prompt:'O que caracterizou o ministério de Smith Wigglesworth?', text:'"Realizou milagres e curas surpreendentes durante quatro décadas — mais de uma dúzia de pessoas foram ressuscitadas."', options:['Milagres e curas por quatro décadas, com pessoas ressuscitadas','Um ministério voltado só para a educação teológica','A fundação de universidades na Inglaterra','A tradução da Bíblia para o inglês moderno'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O ministério de Smith Wigglesworth foi marcado por milagres e curas por quatro décadas, incluindo pessoas {blank}.', answer:'ressuscitadas', options:['ressuscitadas','batizadas','libertas','ordenadas']},
     {type:'memory', prompt:'Encontre os pares: "Generais de Deus" e seu papel', pairs:[
       ['John Alexander Dowie','Apóstolo da cura'],
       ['Amy Semple McPherson','Fundadora da Igreja Quadrangular'],
@@ -604,7 +604,7 @@ const LESSONS = [
     ]},
     {type:'fill', prompt:'Complete:', text:'Kenneth Hagin, aos 17 anos, creu no que Jesus disse em {blank} 11:23-24 e se levantou curado.', answer:'Marcos', options:['Marcos','Mateus','João','Lucas']},
     {type:'fill', prompt:'Complete:', text:'Em 1974, Hagin fundou o Centro de Treinamento Bíblico Rhema, em Tulsa, {blank}.', answer:'Oklahoma', options:['Oklahoma','Texas','Alabama','Kansas']},
-    {type:'select', prompt:'Qual foi a origem da Assembleia de Deus no Brasil, segundo o texto?', text:'"Têm sua origem com a chegada de dois missionários suecos: Gunnar Vingren e Daniel Berg."', options:['A chegada de dois missionários suecos, Gunnar Vingren e Daniel Berg','Uma missão vinda diretamente da Inglaterra','A pregação de Charles Fox Parham em Belém','A tradução da Bíblia para o português'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A Assembleia de Deus no Brasil teve origem com a chegada dos missionários suecos Gunnar Vingren e {blank}.', answer:'Daniel Berg', options:['Daniel Berg','Otto Nelson','Charles Parham','William Seymour']},
     {type:'fill', prompt:'Complete:', text:'Gunnar Vingren e Daniel Berg receberam, num culto, uma visão em que era mostrada a palavra {blank}.', answer:'PARÁ', options:['PARÁ','BELÉM','BRASIL','AMAZÔNIA']},
     {type:'order', prompt:'Ordene a sequência sobre a fundação do Ministério Verbo da Vida:', pieces:['Bud e Jan Wright chegaram ao Brasil em 22 de agosto de 1983','serviram na Missão Ágape, em Campo Mourão, Paraná','e, em 1985, fundaram a primeira igreja Verbo da Vida, em Guarulhos']},
     {type:'fill', prompt:'Complete:', text:'Em 2000, a filiação com a Kenneth Hagin Ministries foi oficializada, e os centros passaram a ser chamados de {blank}.', answer:'Rhema Brasil', options:['Rhema Brasil','Verbo da Vida Internacional','Assembleia de Deus Brasil','Igreja Batista Nacional']},
@@ -616,7 +616,7 @@ const LESSONS = [
     {type:'select', prompt:'Segundo Atos 2:37-39, o que Pedro respondeu quando o povo perguntou o que fazer, no Pentecostes?', text:'"Arrependei-vos, e cada um de vós seja batizado em nome de Jesus Cristo... e recebereis o dom do Espírito Santo."', options:['Que se arrependessem, fossem batizados e receberiam o dom do Espírito Santo','Que esperassem em silêncio até nova ordem','Que voltassem para suas casas','Que apenas os apóstolos poderiam receber o Espírito'], correct:0},
     {type:'fill', prompt:'Complete:', text:'Segundo Efésios 4:11-13, os cinco dons do ministério continuarão enquanto houver pessoas para serem {blank}.', answer:'aperfeiçoadas', options:['aperfeiçoadas','batizadas','ordenadas','perdoadas']},
     {type:'word', prompt:'Complete o nome deste Pai da Igreja:', word:'TERTULIANO', hint:'Viveu entre 160-220 d.C. e se posicionou em defesa do movimento chamado montanismo.'},
-    {type:'select', prompt:'Segundo o erudito F.F. Bruce, o que caracterizava os montanistas?', text:'"Os montanistas, na sua maioria, não se afastaram do fundamento apostólico da Igreja."', options:['Não se afastaram do fundamento apostólico da Igreja','Rejeitavam completamente as Escrituras','Foram os fundadores do gnosticismo','Negavam a existência do Espírito Santo'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Segundo F.F. Bruce, os montanistas, na maioria, não se afastaram do fundamento {blank} da Igreja.', answer:'apostólico', options:['apostólico','doutrinário','político','litúrgico']},
     {type:'select', prompt:'O que Agostinho afirmou, em "Cidade de Deus", sobre os milagres?', text:'"Até agora, portanto, muitos milagres são operados, o mesmo Deus que operou aqueles sobre os quais lemos ainda os realiza."', options:['Que Deus ainda operava milagres em seus dias','Que os milagres haviam cessado com os apóstolos','Que os milagres eram apenas lendas','Que só o papa podia autorizar milagres'], correct:0},
     {type:'fill', prompt:'Complete:', text:'Hilário de Poitiers escreveu um livro intitulado Tratado Sobre a Santíssima {blank}.', answer:'Trindade', options:['Trindade','Igreja','Salvação','Escritura']},
     {type:'match', prompt:'Associe cada nome ao seu feito nos avivamentos de cura divina:', pairs:[
@@ -650,6 +650,7 @@ function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(id==='screen-map') renderMap();
+  window.scrollTo(0, 0);
 }
 
 function bibleIconSVG(color, borderColor){
@@ -707,6 +708,7 @@ function renderMap(){
     const done = state.progress[lesson.id];
 
     const row = document.createElement('div'); row.className='node-row';
+    const bookOffset = Math.round(Math.sin(idx * (Math.PI/2)) * 34);
 
     const pattern = idx % 3;
     if(pattern !== 2){
@@ -714,13 +716,12 @@ function renderMap(){
       const dist = distances[idx % distances.length];
       const treeEl = document.createElement('div'); treeEl.className='trail-tree';
       treeEl.innerHTML = treeSVGByIndex(idx);
-      treeEl.style.transform = `translate(-50%,-50%) translateX(${side*dist}px)`;
+      treeEl.style.transform = `translate(-50%,-50%) translateX(${bookOffset + side*dist}px)`;
       row.appendChild(treeEl);
     }
 
     const bookSlot = document.createElement('div'); bookSlot.className='book-slot';
     const wrap = document.createElement('div'); wrap.className='node-wrap';
-    const bookOffset = Math.round(Math.sin(idx * (Math.PI/2)) * 34);
     wrap.style.transform = `translateX(${bookOffset}px)`;
     const btn = document.createElement('button');
     btn.className = 'node-btn ' + (done?'done':'active');
@@ -735,7 +736,7 @@ function renderMap(){
     trail.appendChild(row);
   });
   const paradise = document.createElement('div'); paradise.className='paradise-wrap';
-  paradise.innerHTML = `<div class="paradise-glow">${paradiseMonumentSVG()}</div><div class="paradise-label">Jornada Completa!</div>`;
+  paradise.innerHTML = `<div class="paradise-glow">${paradiseMonumentSVG()}</div><div class="paradise-label">Complete a Jornada!</div>`;
   trail.appendChild(paradise);
 }
 
@@ -755,6 +756,7 @@ function renderHearts(){
 }
 
 function renderQuestion(){
+  window.scrollTo(0, 0);
   state.answered = false;
   const lesson = state.currentLesson;
   const q = lesson.questions[state.qIndex];
@@ -776,13 +778,14 @@ function renderQuestion(){
     p.innerHTML = before + '<span id="blank-slot" style="display:inline-block;min-width:130px;border-bottom:3px solid var(--blue);text-align:center;color:var(--blue);">?</span>' + after;
     body.appendChild(p);
     const list = document.createElement('div'); list.className='option-list';
-    q.options.forEach(opt=>{
+    const shuffledOpts = q.options.slice().sort(()=>Math.random()-0.5);
+    shuffledOpts.forEach(opt=>{
       const b = document.createElement('button'); b.className='option';
       b.innerHTML = `<span>${opt}</span><span class="icon">✓</span>`;
       b.onclick = ()=>{ if(state.answered) return;
         document.getElementById('blank-slot').textContent = opt;
         q._selected = opt;
-        finalizeAnswer(q, opt===q.answer, [b], q.options.indexOf(q.answer));
+        finalizeAnswer(q, opt===q.answer, [b], shuffledOpts.indexOf(q.answer));
       };
       list.appendChild(b);
     });
@@ -929,10 +932,13 @@ function renderQuestion(){
     const p = document.createElement('div'); p.className='quote-box'; p.textContent = q.text;
     body.appendChild(p);
     const list = document.createElement('div'); list.className='option-list';
-    q.options.forEach((opt,i)=>{
+    const order = q.options.map((_,i)=>i).sort(()=>Math.random()-0.5);
+    const newCorrectIdx = order.indexOf(q.correct);
+    order.forEach((origIdx, shuffledIdx)=>{
+      const opt = q.options[origIdx];
       const b = document.createElement('button'); b.className='option';
       b.innerHTML = `<span>${opt}</span><span class="icon">✓</span>`;
-      b.onclick=()=>{ if(state.answered) return; q._selected=i; finalizeAnswer(q, i===q.correct, [b], q.correct); };
+      b.onclick=()=>{ if(state.answered) return; q._selected=shuffledIdx; finalizeAnswer(q, shuffledIdx===newCorrectIdx, [b], newCorrectIdx); };
       list.appendChild(b);
     });
     body.appendChild(list);
