@@ -70,16 +70,15 @@ button{ font-family:inherit; cursor:pointer; }
 .stat-pill{ display:flex; align-items:center; gap:6px; font-family:'Baloo 2'; font-weight:700; font-size:16px; background:var(--gray-bg); padding:6px 12px; border-radius:20px; }
 #screen-map h2{ font-size:20px; color:var(--ink); }
 .map-sub{ color:var(--gray-text); font-weight:700; font-size:13px; margin-top:-8px;}
-.trail{ display:flex; flex-direction:column; align-items:center; gap:22px; margin-top:12px; padding-bottom:20px; }
-.node-btn{ width:88px; height:88px; border-radius:50%; border:none; background:var(--gray-border); box-shadow:0 6px 0 #cfcfcf; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.node-btn.done{ background:var(--gold); box-shadow:0 6px 0 var(--gold-dark); }
-.node-btn.active{ background:var(--green); box-shadow:0 6px 0 var(--green-dark); }
-.node-btn:disabled{ opacity:0.55; }
-.node-btn:active:not(:disabled){ transform:translateY(5px); box-shadow:none; }
-.node-emoji{ font-size:26px; }
-.node-label{ font-family:'Baloo 2'; font-size:11px; font-weight:700; color:#fff; text-align:center; width:70px; margin-top:2px; }
-.node-btn.done .node-label, .node-btn.active .node-label{ color:#fff; }
-.node-btn:not(.done):not(.active) .node-label{ color:#8a8a8a; }
+.trail{ display:flex; flex-direction:column-reverse; align-items:center; gap:34px; margin-top:12px; padding:20px 0 30px; position:relative; }
+.node-wrap{ display:flex; flex-direction:column; align-items:center; transition: transform .05s ease; }
+.node-btn{ width:108px; height:132px; border-radius:14px; border:2px solid var(--gray-border); border-bottom-width:6px; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px; }
+.node-btn:active{ transform:translateY(4px); border-bottom-width:2px; }
+.node-emoji{ display:flex; align-items:center; justify-content:center; }
+.node-label{ font-family:'Baloo 2'; font-size:12px; font-weight:700; color:var(--ink); text-align:center; width:96px; line-height:1.25; }
+.node-num{ font-family:'Baloo 2'; font-size:11px; font-weight:800; color:var(--gray-text); }
+.node-btn.done{ border-color:var(--gold-dark); }
+.node-btn.active{ border-color:var(--green-dark); }
 
 /* ---------- QUIZ ---------- */
 #screen-quiz{ gap:12px; padding-bottom:0; }
@@ -118,6 +117,16 @@ button{ font-family:inherit; cursor:pointer; }
 .hint-text{ color:var(--gray-text); font-weight:600; font-size:13px; text-align:center; }
 
 .match-cols{ display:flex; gap:10px; }
+.match-cols3{ display:flex; gap:6px; }
+.match-cols3 .match-col{ min-width:0; }
+.match-cols3 .match-item{ font-size:12px; padding:9px 6px; }
+.memory-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.memory-card{ min-height:74px; border-radius:12px; border:2px solid var(--gray-border); border-bottom-width:4px; background:#fff; display:flex; align-items:center; justify-content:center; text-align:center; font-size:12px; font-weight:700; padding:6px; cursor:pointer; color:var(--ink); }
+.memory-card.hidden-face{ background:var(--blue); color:#fff; font-size:24px; border-color:var(--blue-dark); }
+.memory-card.revealed{ border-color:var(--gold); background:#FFF6DA; }
+.memory-card.matched{ border-color:var(--green); background:#D7FFB8; color:var(--green-dark); pointer-events:none; opacity:0.85; }
+.falling-track{ position:relative; height:220px; background:var(--gray-bg); border-radius:14px; overflow:hidden; border:2px solid var(--gray-border); }
+.falling-word{ position:absolute; left:50%; transform:translateX(-50%); background:#fff; border:2px solid var(--blue); border-bottom-width:4px; border-radius:12px; padding:10px 16px; font-family:'Baloo 2'; font-weight:800; font-size:15px; cursor:pointer; white-space:nowrap; color:var(--ink); transition: top 0.05s linear; }
 .match-col{ flex:1; display:flex; flex-direction:column; gap:8px; }
 .match-item{ background:#fff; border:2px solid var(--gray-border); border-bottom-width:4px; border-radius:12px; padding:12px 8px; font-size:13px; font-weight:700; text-align:center; color:var(--ink); }
 .match-item.selected{ border-color:var(--blue); background:#E7F7FF; }
@@ -249,7 +258,7 @@ const LESSONS = [
     {type:'select', prompt:'Segundo a Nota do Editor, como o material trata as divergências de datação?', text:'"Nos casos de divergências nas datações por parte de alguns autores, adotaremos o critério da observação de convergências, dialogando as datações mais aproximadas do ponto de vista histórico e teológico."', options:['Adota o critério de observar as convergências entre os autores','Ignora todas as datas por completo','Segue sempre um único autor sem checar outros','Considera que datas não têm importância nenhuma'], correct:0},
     {type:'fill', prompt:'Complete:', text:'Segundo Efésios 1:22-23, a Igreja é chamada de {blank} de Cristo.', answer:'corpo', options:['corpo','noiva','templo','família']},
     {type:'word', prompt:'Complete o nome do teólogo:', word:'AGOSTINHO', hint:'Destacou-se fazendo uma interpretação teológica da História — no grego, *teos* (Deus) + *logia* (estudo).'},
-    {type:'select', prompt:'Qual anotação o aluno fez sobre a base da Igreja (referenciando Mateus 16:13-18)?', text:'"A base da Igreja é Jesus e não Pedro."', options:['A Igreja é fundamentada em Jesus, não em Pedro','A Igreja é fundamentada em Pedro','A Igreja não tem fundamento definido','A Igreja é fundamentada apenas na tradição'], correct:0},
+    {type:'select', prompt:'Segundo 1 Coríntios 10:32, para quem os cristãos não devem se tornar causa de tropeço?', text:'"Não vos torneis causa de tropeço nem para JUDEUS, nem para GENTIOS, nem tampouco para a IGREJA DE DEUS."', options:['Judeus, gentios e a Igreja de Deus','Somente para os judeus','Somente para os romanos','Ninguém, pois isso não tem importância'], correct:0},
     {type:'match', prompt:'Associe cada termo da periodização:', pairs:[
       ['a.C.','Antes de Cristo, em ordem decrescente'],
       ['d.C.','Depois de Cristo, em ordem crescente'],
@@ -270,7 +279,7 @@ const LESSONS = [
      ]},
     {type:'fill', prompt:'Complete:', text:'A Igreja Imperial começou com o {blank} (311 d.C.), confirmado pelo Edito de Milão (313 d.C.).', answer:'Edito de Tolerância', options:['Edito de Tolerância','Edito de Roma','Concílio de Niceia','Edito de Milão II']},
     {type:'select', prompt:'Por que estudar a História da Igreja?', text:'"É necessário estar pronto para a defesa da fé (1 Pedro 3:15)."', options:['Só para passar em provas','Para estar pronto para a defesa da fé e entender o contexto atual','Porque não há outro motivo relevante','Para memorizar datas sem propósito'], correct:1},
-    {type:'select', prompt:'De acordo com a dica do livro, a que anos corresponde o Século XXI?', text:'"SÉC XXI = 2001 à 2100 anos"', options:['2001 a 2100','1901 a 2000','1801 a 1900','2100 a 2200'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A Igreja Reformada (na Idade Moderna) vai da queda de Constantinopla (1453 d.C.) até a {blank} (1789 d.C.).', answer:'Revolução Francesa', options:['Revolução Francesa','Reforma Protestante','Guerra dos Cem Anos','Independência dos EUA']},
     {type:'fill', prompt:'Complete:', text:'A Igreja Apostólica vai de 33 d.C. até aproximadamente {blank} d.C. (morte de João).', answer:'100', options:['100','200','305','313']},
     {type:'match', prompt:'Associe cada Idade ao seu sistema econômico:', pairs:[
       ['Idade Antiga','Escravismo'],
@@ -301,11 +310,319 @@ const LESSONS = [
     {type:'word', prompt:'Complete o nome do inventor:', word:'GUTENBERG', hint:'Inventou a prensa móvel (1400-1468), essencial para a produção em massa de livros.'},
     {type:'fill', prompt:'Complete:', text:'A Bíblia tem 66 livros: {blank} no Antigo Testamento e 27 no Novo Testamento.', answer:'39', options:['39','40','27','66']},
   ]
+},
+{
+  id:'l4', title:'A Igreja Apostólica', pages:'292-301',
+  questions:[
+    {type:'fill', prompt:'Complete:', text:'Segundo Efésios 2:20-21, a Igreja está edificada sobre o fundamento dos apóstolos e profetas, sendo Cristo Jesus a {blank}.', answer:'pedra angular', options:['pedra angular','porta estreita','luz do mundo','boa nova']},
+    {type:'select', prompt:'Qual foi o marco público do início da Igreja de Cristo na Terra, segundo o texto?', text:'"Ao cumprir-se o dia de Pentecostes, estavam todos reunidos no mesmo lugar; de repente, veio do céu um som, como de um vento impetuoso, e encheu toda a casa onde estavam assentados." (Atos 2:1-4)', options:['O dia de Pentecostes, com a descida do Espírito Santo','O nascimento de Jesus','A crucificação de Jesus','O batismo de João Batista'], correct:0},
+    {type:'word', prompt:'Complete o nome da cidade:', word:'JERUSALEM', hint:'Destacava-se como centro irradiador da Igreja Primitiva, por causa da autoridade apostólica dos que ali permaneceram.'},
+    {type:'select', prompt:'O que caracterizava a composição social da Igreja Primitiva?', text:'"Em todos os lugares que se estabeleceu, a Igreja não fazia distinção entre raças, ricos ou pobres, escravos ou livres."', options:['Não fazia distinção entre raças, classes ou condição social','Aceitava apenas romanos livres','Era formada só por pessoas ricas','Separava os membros por origem étnica'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A principal fonte histórica da Igreja Apostólica é o livro de Atos, escrito por {blank}, perto do ano 61 d.C.', answer:'Lucas', options:['Lucas','Paulo','Pedro','João']},
+    {type:'order', prompt:'Ordene a sequência sobre a instituição dos diáconos:', pieces:['Sete homens foram escolhidos','para cuidar da assistência social no lugar dos apóstolos','que precisavam se dedicar ao ministério da Palavra']},
+    {type:'select', prompt:'O que aconteceu após a morte de Estêvão, segundo o texto?', text:'"Com a morte de Estêvão, terminou a primeira fase histórica da igreja em Jerusalém. A maioria da comunidade foi dispersa e ia a toda parte pregando a Palavra."', options:['A comunidade foi dispersa e passou a pregar a Palavra por toda parte','A Igreja de Jerusalém cresceu ainda mais rápido','Todos os apóstolos foram mortos junto com ele','A perseguição parou imediatamente'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Na igreja de Antioquia, pela primeira vez, os seguidores de Cristo foram chamados de {blank}.', answer:'cristãos', options:['cristãos','nazarenos','discípulos','irmãos']},
+    {type:'match', prompt:'Associe cada nome ao seu papel nesse período:', pairs:[
+      ['Barnabé','Enviado para averiguar a igreja de Antioquia'],
+      ['Saulo (Paulo)','Convertido de perseguidor a defensor do evangelho'],
+      ['Estêvão','Primeiro mártir; sua morte dispersou a igreja de Jerusalém'],
+    ]},
+    {type:'select', prompt:'Segundo Eusébio de Cesareia, como morreram Pedro e Paulo?', text:'"Pedro foi crucificado de cabeça para baixo, conforme ele mesmo desejara sofrer, e Paulo foi morto por decapitação."', options:['Pedro crucificado de cabeça para baixo; Paulo decapitado','Ambos foram decapitados','Ambos foram crucificados da forma tradicional','Pedro decapitado; Paulo crucificado'], correct:0},
+  ]
+},
+{
+  id:'l5', title:'Mártires e Pais da Igreja', pages:'302-306',
+  questions:[
+    {type:'match', prompt:'Associe cada apóstolo à forma de seu martírio:', pairs:[
+      ['André','Crucificado'],
+      ['Tiago Maior, irmão de João','Decapitado em Jerusalém por Herodes'],
+      ['Bartolomeu','Espancado, crucificado e depois esfolado'],
+    ]},
+    {type:'select', prompt:'Segundo "O Livro dos Mártires", o que André disse ao ver a cruz preparada para seu martírio?', text:'"Ó cruz, extremamente bem-vinda e tão longamente esperada! De boa vontade, cheio de alegria e desejo, eu venho a ti."', options:['Recebeu a cruz com alegria, dizendo que era bem-vinda e esperada','Pediu clemência ao imperador','Negou a fé para escapar da morte','Ficou em silêncio até o fim'], correct:0},
+    {type:'word', prompt:'Complete o nome deste Pai da Igreja:', word:'POLICARPO', hint:'Discípulo de João, bispo de Esmirna; recusou-se a negar a Cristo e foi queimado vivo.'},
+    {type:'fill', prompt:'Complete a frase de Policarpo ao procônsul:', text:'"Há oitenta e seis anos eu O sirvo, e Ele nunca me {blank}."', answer:'faltou', options:['faltou','abandonou','decepcionou','esqueceu']},
+    {type:'select', prompt:'O que Pápias afirmava sobre o Evangelho de Marcos?', text:'"Ele afirmava que o Evangelho de Marcos se baseava nas palavras de Pedro."', options:['Que se baseava nas palavras de Pedro','Que foi escrito por Paulo','Que era uma cópia do Evangelho de João','Que não deveria ser considerado inspirado'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Os Evangelhos de Mateus, Marcos e Lucas são conhecidos como Evangelhos {blank}, por seu paralelismo textual.', answer:'sinóticos', options:['sinóticos','apócrifos','pastorais','patrísticos']},
+    {type:'match', prompt:'Associe cada apologista à sua obra ou marca:', pairs:[
+      ['Justino','Escreveu "Apologia" e "Diálogo com Trifon"'],
+      ['Irineu','Escreveu "Contra Heresias" contra o gnosticismo'],
+      ['Tertuliano','Chamado "o pai do cristianismo latino"'],
+    ]},
+    {type:'select', prompt:'O que caracterizou Orígenes, segundo o texto?', text:'"Foi identificado como o maior conhecedor da Bíblia entre todos os escritores da Igreja Primitiva."', options:['Era considerado o maior conhecedor da Bíblia entre os escritores da Igreja Primitiva','Recusava-se a estudar as Escrituras','Foi o fundador do gnosticismo','Nunca escreveu nenhuma obra'], correct:0},
+    {type:'word', prompt:'Complete o nome deste bispo e historiador:', word:'EUSEBIO', hint:'Bispo de Cesareia, amigo e conselheiro de Constantino; escreveu "História Eclesiástica" e foi chamado "pai da História eclesiástica".'},
+    {type:'fill', prompt:'Complete:', text:'Jerônimo de Estridão ajudou na tradução da Bíblia para o latim, uma versão conhecida como {blank}.', answer:'Vulgata Latina', options:['Vulgata Latina','Septuaginta','Peshitta','Targum']},
+  ]
+},
+{
+  id:'l6', title:'Causas e Fases da Perseguição', pages:'307-310',
+  questions:[
+    {type:'select', prompt:'O que provocava as perseguições contra a Igreja até por volta de 64 d.C., segundo o texto?', text:'"As perseguições contra a Igreja, até por volta do ano 64 d.C., eram provocadas pelos judeus, geralmente fanáticos, com o apoio das autoridades locais."', options:['Judeus fanáticos, com apoio das autoridades locais','O próprio Império Romano, desde o início','Apenas rivalidades entre os próprios apóstolos','Comerciantes gregos insatisfeitos'], correct:0},
+    {type:'match', prompt:'Associe cada causa da perseguição à sua explicação:', pairs:[
+      ['Monoteísmo Radical','O cristianismo rejeitava qualquer adoração fora do próprio Deus'],
+      ['Adoração ao Imperador','Recusar-se a isso era visto como prova de deslealdade ao Estado'],
+      ['Falta de Comunhão com o Estilo Pagão','Cristãos eram vistos como insociáveis por não participar da vida pagã'],
+    ]},
+    {type:'fill', prompt:'Complete:', text:'Segundo o texto, um {blank} podia ser eleito bispo na Igreja Cristã, o que era inaceitável para os nobres e filósofos da época.', answer:'escravo', options:['escravo','soldado','comerciante','estrangeiro']},
+    {type:'match3', prompt:'Associe cada imperador ao seu período e ao fato marcante de sua perseguição:', rows:[
+      ['Nero','54-68 d.C.','Incêndio de Roma; Pedro e Paulo martirizados'],
+      ['Domiciano','81-96 d.C.','João foi exilado na ilha de Patmos'],
+      ['Marco Aurélio','161-180 d.C.','Mártir Justino, filósofo convertido a Cristo'],
+      ['Diocleciano','284-305 d.C.','Ordenou queimar as Bíblias; renunciou ao trono em 305'],
+    ]},
+    {type:'timeline_periods', prompt:'Arraste cada imperador para a ordem cronológica certa de suas perseguições:', items:['Nero','Domiciano','Marco Aurélio','Septímio Severo','Décio e Valeriano','Diocleciano']},
+    {type:'word', prompt:'Complete o nome deste governador romano:', word:'PLINIO', hint:'Escreveu uma carta ao imperador Trajano relatando que os cristãos apenas cantavam hinos e seguiam as leis, sem cometer crimes.'},
+    {type:'select', prompt:'O que caracterizou o período de Trajano até Antonino Pio, segundo o texto?', text:'"O cristianismo não foi reconhecido, mas também não foi perseguido de modo severo."', options:['O cristianismo não era reconhecido, mas também não era perseguido severamente','O cristianismo se tornou a religião oficial de Roma','Foi o período de perseguição mais violenta de todas','Os cristãos foram todos expulsos de Roma'], correct:0},
+    {type:'fill', prompt:'Complete a frase de Cipriano sobre a perseguição de Décio:', text:'"O mundo inteiro está {blank}."', answer:'devastado', options:['devastado','arruinado','perdido','condenado']},
+    {type:'select', prompt:'O que Diocleciano determinou durante sua perseguição?', text:'"Determinou que todas as Bíblias fossem queimadas e todos os templos fossem destruídos, e exigiu que os cristãos renunciassem ao cristianismo e à fé."', options:['Que as Bíblias fossem queimadas e os templos destruídos','Que os cristãos recebessem mais liberdade religiosa','Que os templos cristãos fossem multiplicados','Que apenas os bispos fossem perseguidos'], correct:0},
+    {type:'order', prompt:'Ordene a sequência sobre o martírio de Perpétua e Felicitas:', pieces:['Perpétua, nobre mulher de Cartago','e Felicitas, sua fiel escrava','foram despedaçadas pelas feras no ano 203']},
+  ]
+},
+{
+  id:'l7', title:'Constantino e os Concílios', pages:'311-316',
+  questions:[
+    {type:'select', prompt:'Segundo Irineu de Lyon, em "Contra Heresias", o que ele observava entre os irmãos na Igreja?', text:'"Da mesma maneira nós também ouvimos muitos irmãos na igreja que possuem dons proféticos e pelo Espírito falam todo tipo de línguas."', options:['Que muitos possuíam dons proféticos e falavam em línguas pelo Espírito','Que os dons haviam desaparecido da Igreja','Que apenas os apóstolos tinham dons espirituais','Que os cristãos negavam qualquer manifestação sobrenatural'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Constantino, filho de Constâncio, publicou o {blank} em 313 d.C., confirmando a liberdade de culto aos cristãos.', answer:'Edito de Milão', options:['Edito de Milão','Edito de Tolerância','Edito de Teodósio','Edito de Constantinopla']},
+    {type:'order', prompt:'Ordene a sequência sobre a ascensão de Constantino:', pieces:['Após a renúncia de Diocleciano, quatro aspirantes à coroa estavam em guerra','os dois rivais mais poderosos eram Maxêncio e Constantino','Constantino venceu, e Maxêncio morreu afogado no rio Tibre']},
+    {type:'word', prompt:'Complete o nome deste Concílio, convocado pelo próprio imperador em 325 d.C.:', word:'NICEIA', hint:'Neste Concílio foi repudiado o arianismo, que afirmava que Jesus era um deus menor, inferior ao Pai.'},
+    {type:'fill', prompt:'Complete:', text:'Em 380 d.C., o imperador {blank} decretou o Cristianismo Ortodoxo como religião oficial do Império Romano.', answer:'Teodósio', options:['Teodósio','Constantino','Diocleciano','Galério']},
+    {type:'select', prompt:'Segundo o escritor Eddie Hyatt, o que aconteceu na Igreja após a oficialização do Cristianismo?', text:'"Como resultado, hordas de pagãos não convertidos encheram as igrejas, trazendo com eles ideias e práticas pagãs."', options:['Hordas de pagãos não convertidos encheram as igrejas','Todos os pagãos se converteram sinceramente','A Igreja se tornou menor e mais pura','O paganismo foi completamente extinto'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O cânon do Novo Testamento foi oficialmente fixado no III Concílio de Cartago, em {blank} d.C.', answer:'397', options:['397','325','381','313']},
+    {type:'timeline_dates', prompt:'Arraste o ano certo para cada Concílio:', items:[
+      {label:'Concílio de Nicéia (repudiou o arianismo)', date:'325'},
+      {label:'Concílio de Constantinopla (repudiou o apolinarismo)', date:'381'},
+      {label:'Concílio de Éfeso (repudiou o nestorianismo)', date:'431'},
+      {label:'Concílio de Calcedônia (repudiou o eutiquianismo)', date:'451'},
+    ]},
+    {type:'memory', prompt:'Encontre os pares: heresia e o que ela ensinava', pairs:[
+      ['Docetismo','Jesus não tinha um corpo humano real'],
+      ['Ebionismo','Negava a divindade de Jesus'],
+      ['Adocionismo','Jesus era homem comum que recebeu poder no batismo'],
+      ['Sabelianismo','Pai, Filho e Espírito Santo são uma pessoa com máscaras diferentes'],
+    ]},
+    {type:'select', prompt:'O que o 3º Concílio de Constantinopla (680/681 d.C.) definiu?', text:'"Doutrina das duas vontades de Cristo."', options:['A doutrina das duas vontades de Cristo','A doutrina da Trindade','O cânon do Antigo Testamento','A data da Páscoa'], correct:0},
+  ]
+},
+{
+  id:'l8', title:'Os Monges e o Poder Papal', pages:'317-320',
+  questions:[
+    {type:'select', prompt:'O que o Concílio Vaticano I (1869-1870) declarou?', text:'"Declarada a infalibilidade do papa, ensinando que aquilo que o papa fala sobre questões doutrinais ou éticas, como chefe da Igreja, é infalível e deve ser obedecido pelos fiéis."', options:['A infalibilidade do papa em questões doutrinais e éticas','O fim do celibato sacerdotal','A tradução da Bíblia para o latim','A criação da Igreja Ortodoxa'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O movimento monástico foi fundado por {blank}, em 320 d.C., no Egito.', answer:'Antão', options:['Antão','Bento','Simeão','Agostinho']},
+    {type:'order', prompt:'Ordene a sequência sobre Simeão Estilista:', pieces:['Simeão Estilista foi o iniciador dos "santos das colunas"','viveu 37 anos na Síria','em uma coluna que possuía 18 metros de altura']},
+    {type:'word', prompt:'Complete o nome desta ordem monástica europeia:', word:'BENEDITINOS', hint:'A mais conhecida ordem de mosteiros da Europa, fundada por São Bento.'},
+    {type:'select', prompt:'Quando o termo "católico" passou a significar a supremacia da Igreja de Roma com poder político, segundo o texto?', text:'"A partir do século V — com a queda do Império Romano do Ocidente —, os moldes de Igreja Católica Apostólica Romana com poder temporal (político)."', options:['A partir do século V, com a queda do Império Romano do Ocidente','Ainda no século I, com os apóstolos','No século XVI, com a Reforma','Somente no século XX'], correct:0},
+    {type:'match', prompt:'Associe cada fator ao seu efeito na consolidação do papado:', pairs:[
+      ['Declínio político do Império','Cedeu espaço ao núcleo religioso-político em Roma'],
+      ['Divisão do Império em 395','Criou rivalidade entre Roma e Constantinopla'],
+      ['Iniciativa do bispo de Roma em 440 d.C.','Proclamou-se papa, com o título de Leão I'],
+    ]},
+    {type:'fill', prompt:'Complete:', text:'Em 440 d.C., o bispo de Roma proclamou-se papa com o título de {blank}.', answer:'Leão I', options:['Leão I','Gregório I','Inocêncio III','Bonifácio VIII']},
+    {type:'select', prompt:'Segundo Strossmayer, o que os apóstolos nunca reconheceram em Pedro?', text:'"Que os apóstolos nunca reconheceram S. Pedro como o vigário de Jesus Cristo."', options:['Que Pedro fosse o vigário de Jesus Cristo','Que Pedro fosse um apóstolo','Que Pedro tivesse pregado o evangelho','Que Pedro fosse pescador'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Segundo o quadro do livro, o Concílio de Jerusalém ocorreu em 49 d.C., e quem o presidiu não foi {blank}.', answer:'Pedro', options:['Pedro','Paulo','Tiago','João']},
+    {type:'select', prompt:'Segundo Efésios 2:19-22, sobre o que a Igreja está edificada?', text:'"Edificados sobre o fundamento dos apóstolos e profetas, sendo ele mesmo, Cristo Jesus, a pedra angular."', options:['O fundamento dos apóstolos e profetas, com Cristo Jesus como pedra angular','Apenas a autoridade do bispo de Roma','As tradições dos concílios medievais','A força política do Império Romano'], correct:0},
+  ]
+},
+{
+  id:'l9', title:'A Queda de Roma e a Igreja Medieval', pages:'322-328',
+  questions:[
+    {type:'fill', prompt:'Complete:', text:'Em 476 d.C., uma tribo de germânicos apoderou-se de Roma e destronou o menino imperador {blank}, conhecido como Augusto, o Pequeno.', answer:'Rômulo', options:['Rômulo','Rômano','Valentiniano','Honório']},
+    {type:'select', prompt:'Segundo o texto, quanto tempo durou a Idade Média?', text:'"A Idade Média... compreendendo, então, cerca de mil anos desde a queda de Roma (476 d.C.) até a queda de Constantinopla (1453 d.C.)."', options:['Cerca de mil anos, entre 476 e 1453','Apenas 100 anos','Cerca de 300 anos','Mais de 2000 anos'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A "Falsa Doação de Constantino" alegava que o imperador havia dado ao bispo de Roma autoridade suprema sobre todas as {blank} do Império.', answer:'províncias', options:['províncias','riquezas','igrejas','terras']},
+    {type:'word', prompt:'Complete o nome de família deste papa:', word:'HILDEBRANDO', hint:'Nome de família do Papa Gregório VII, que exigiu o celibato dos sacerdotes e a supremacia da Igreja sobre o Estado.'},
+    {type:'select', prompt:'O que Inocêncio III (1198-1216) afirmava sobre a posição do papa?', text:'"Afirmou que o papa ocupa uma posição entre Deus e o homem. É inferior a Deus, porém superior ao homem, sendo juiz de todos, mas não é julgado por ninguém."', options:['O papa é inferior a Deus, mas superior ao homem, e não é julgado por ninguém','O papa é igual a Deus em todos os aspectos','O papa deve se submeter aos reis europeus','O papa não tem nenhuma autoridade especial'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O Período de Decadência do poder papal culminou no chamado "Cativeiro {blank}" (1305-1377).', answer:'Babilônico', options:['Babilônico','Romano','Francês','Papal']},
+    {type:'memory', prompt:'Encontre os pares: termo do Cisma e seu significado', pairs:[
+      ['Filioque','Cláusula do Credo condenada como herética pelo patriarca Fócio'],
+      ['Iconoclastia','Destruição de imagens religiosas'],
+      ['Dulia','Veneração das imagens, sem ser adoração'],
+      ['Anátema','Excomunhão mútua entre papa e patriarca em 1054'],
+    ]},
+    {type:'falling', prompt:'Toque só nas palavras ligadas ao Islamismo, segundo o texto:', correct:['Maomé','Meca','Califado','Djihad'], distractors:['Carlos Magno','Papa Leão III']},
+    {type:'select', prompt:'O que aconteceu no Natal de 800 d.C., segundo o texto?', text:'"Numa missa na catedral no Natal de 800, com Carlos Magno ajoelhado diante do altar, o papa colocou a coroa sobre sua cabeça e o declarou imperador dos romanos."', options:['O papa coroou Carlos Magno como imperador dos romanos','Carlos Magno foi excomungado pelo papa','O Sacro Império Romano foi dissolvido','Carlos Magno recusou a coroa oferecida'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Em 1054, o Papa Leão IX excomungou o patriarca Miguel I Cerulário, que por sua vez anatematizou o papa, oficializando o {blank} do Oriente.', answer:'Grande Cisma', options:['Grande Cisma','Concílio de Trento','Cativeiro Babilônico','Edito de Milão']},
+  ]
+},
+{
+  id:'l10', title:'Inquisição, Cruzadas e Fim da Idade Média', pages:'329-331',
+  questions:[
+    {type:'select', prompt:'Segundo o texto, qual era a missão dos Tribunais da Inquisição?', text:'"Foram fundados, então, os Tribunais da Inquisição, cuja missão era inquirir e julgar os heréticos."', options:['Inquirir e julgar os heréticos','Traduzir a Bíblia para as línguas locais','Organizar as Cruzadas','Administrar os mosteiros europeus'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Em 1233, o Papa {blank} comissionou os dominicanos para punir a heresia.', answer:'Gregório IX', options:['Gregório IX','Inocêncio III','Urbano II','Leão IX']},
+    {type:'select', prompt:'Qual foi o apelo do Papa Urbano II em 1096, dando início às Cruzadas?', text:'"Faz um apelo aos nobres europeus para a libertação da Palestina ocupada pelos muçulmanos."', options:['A libertação da Palestina, ocupada pelos muçulmanos','A construção de uma nova catedral em Roma','O fim do celibato sacerdotal','A tradução da Bíblia para o latim'], correct:0},
+    {type:'timeline_dates', prompt:'Arraste o ano certo para cada Cruzada:', items:[
+      {label:'Primeira Cruzada (Godofredo de Bouillón)', date:'1095'},
+      {label:'Quarta Cruzada (tomada de Constantinopla)', date:'1201'},
+      {label:'Sexta Cruzada (Luís IX)', date:'1248'},
+      {label:'Sétima Cruzada (Luís IX)', date:'1270'},
+    ]},
+    {type:'word', prompt:'Complete o nome desta cidade:', word:'VENEZA', hint:'Seus mercadores financiaram a Quarta Cruzada, a primeira cruzada marítima, monopolizando o comércio com Constantinopla.'},
+    {type:'select', prompt:'Segundo o texto, por que as Cruzadas fracassaram?', text:'"As cruzadas fracassaram devido às discórdias entre os chefes, que estavam mais preocupados com os interesses próprios do que com a causa comum."', options:['Discórdias entre os chefes, mais preocupados com interesses próprios','Falta de soldados disponíveis na Europa','Os muçulmanos aceitaram negociar a paz logo no início','O papa cancelou todas as expedições'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'O Canto {blank} foi introduzido na Igreja Medieval por Gregório Magno.', answer:'Gregoriano', options:['Gregoriano','Ambrosiano','Litúrgico','Sacro']},
+    {type:'match', prompt:'Associe cada prática da Igreja Medieval à sua descrição:', pairs:[
+      ['Venda de indulgências','Perdão dos pecados mediante pagamento'],
+      ['Venda de relíquias sagradas','Comércio de objetos como espinhos da coroa de Cristo'],
+      ['Canto Gregoriano','Introduzido por Gregório Magno nas missas'],
+    ]},
+    {type:'falling', prompt:'Toque só nas causas do fim da Idade Média, segundo o "Você Sabia?":', correct:['Peste Negra','Fome','Perdas Agrícolas'], distractors:['Reforma Protestante','Invenção da Prensa']},
+    {type:'order', prompt:'Ordene a sequência sobre o que antecedeu a Reforma:', pieces:['As grandes riquezas e a arrogância dos sacerdotes','despertaram o descontentamento do povo','e ajudaram a preparar o caminho para a Reforma Protestante']},
+  ]
+},
+{
+  id:'l11', title:'Bases da Reforma e os Pré-Reformadores', pages:'332-337',
+  questions:[
+    {type:'select', prompt:'Segundo o texto, o que a Reforma Protestante realmente representou?', text:'"Muitos equivocadamente costumam pensar sobre a Reforma Protestante como um evento que destruiu tudo que havia sido construído na História da Igreja... não temos uma nova construção, mas, sim, o acontecimento de uma reforma."', options:['Uma reforma do que já existia, não uma construção do zero','A destruição completa da Igreja anterior','A criação de uma religião totalmente nova','O fim definitivo do Cristianismo na Europa'], correct:0},
+    {type:'word', prompt:'Complete o nome desta cidade alemã:', word:'MAINZ', hint:'Cidade onde a impressão por tipos móveis foi introduzida por volta de 1450.'},
+    {type:'fill', prompt:'Complete:', text:'Os Renascentistas denominaram a Idade Média como Idade das {blank}.', answer:'Trevas', options:['Trevas','Sombras','Escuridão Total','Ignorância']},
+    {type:'select', prompt:'O que caracterizou a Igreja Romana entre 1309 e 1439, segundo o texto?', text:'"A Igreja Romana começa a sofrer descrédito, principalmente pelos seguintes motivos: exigências ao celibato; obediência absoluta ao papa; o cativeiro Babilônico; o grande Cisma e o cisma papal; os altíssimos impostos papais."', options:['Sofreu forte descrédito, por causa do cativeiro papal, cismas e impostos altíssimos','Viveu seu período de maior prestígio e unidade','Perdeu todos os seus territórios na Europa','Foi totalmente reformada pelo papa'], correct:0},
+    {type:'memory', prompt:'Encontre os pares: taxa papal e o que ela cobrava', pairs:[
+      ['Anatas','Pagamento do primeiro salário do ano ao papa'],
+      ['Direito de Espólio','Propriedade pessoal do alto clero, passada ao papa após sua morte'],
+      ['Dinheiro de Pedro','Quantia paga pelos leigos em muitas regiões'],
+    ]},
+    {type:'select', prompt:'Segundo Carter Lindberg, como o poeta Petrarca descreveu a corte papal em Avinhão?', text:'"Descreveu a luxúria e o mundanismo da corte papal como \'o esgoto do mundo\'."', options:['Como "o esgoto do mundo"','Como um exemplo de santidade','Como um modelo de simplicidade','Como um lugar de pobreza extrema'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Os Valdenses foram excomungados em {blank}, por contestarem os costumes e as doutrinas da Igreja.', answer:'1184', options:['1184','1170','1215','1054']},
+    {type:'select', prompt:'Qual foi o principal feito de John Wycliffe?', text:'"Seu maior feito foi traduzir a Bíblia para o inglês — o Novo Testamento, em 1380, e o Antigo Testamento, em 1384."', options:['Traduzir a Bíblia para o inglês','Fundar a Universidade de Oxford','Convocar o Concílio de Constança','Escrever as 95 teses'], correct:0},
+    {type:'order', prompt:'Ordene a sequência sobre o martírio de John Huss:', pieces:['John Huss foi convencido a ir ao Concílio de Constança, com um salvo-conduto','porém, ao chegar lá, foi traído','sendo condenado e queimado em 1415']},
+    {type:'fill', prompt:'Complete a oração final de William Tyndale antes de morrer na estaca:', text:'"Senhor, abra os olhos do {blank} da Inglaterra."', answer:'rei', options:['rei','povo','clero','papa']},
+  ]
+},
+{
+  id:'l12', title:'Martinho Lutero', pages:'337-343',
+  questions:[
+    {type:'fill', prompt:'Complete:', text:'Em 1453, Constantinopla foi tomada pelos turcos sob as ordens de {blank}.', answer:'Maomé II', options:['Maomé II','Maomé I','Solimão','Amurate']},
+    {type:'select', prompt:'Quais foram os principais temas defendidos durante a Reforma (1453-1648), segundo o texto?', text:'"Autoridade das Escrituras; Salvação pela graça e justificação pela fé; Jesus Cristo como único mediador... Governo da igreja, relação Igreja e Estado; Conhecimento de Deus."', options:['Autoridade das Escrituras, salvação pela graça e pela fé, e Cristo como único mediador','A autoridade suprema do papa sobre as Escrituras','A tradição oral como única fonte de fé','A submissão total ao Sacro Império Romano'], correct:0},
+    {type:'fill', prompt:'Complete a frase de John Huss antes de ser queimado:', text:'"Podem matar o ganso, mas daqui a cem anos surgirá um {blank} que não poderão queimar."', answer:'cisne', options:['cisne','fênix','leão','águia']},
+    {type:'word', prompt:'Complete o nome desta cidade alemã:', word:'WITTENBERG', hint:'Cidade onde Lutero se tornou professor da Universidade em 1508, e onde pregou as 95 teses.'},
+    {type:'match', prompt:'Associe cada "Sola" da Reforma ao seu significado:', pairs:[
+      ['Sola Scriptura','A Bíblia por si só é nossa suprema autoridade'],
+      ['Sola Gratia','Somos salvos unicamente pela graça de Deus'],
+      ['Solus Christus','Confiamos no Senhor Jesus Cristo somente para nossa salvação'],
+    ]},
+    {type:'fill', prompt:'Complete a frase de João Tetzel sobre as indulgências:', text:'"Assim que a moeda tilintar no cofre, uma alma é liberta do {blank}."', answer:'purgatório', options:['purgatório','inferno','pecado','juízo']},
+    {type:'select', prompt:'O que Lutero declarou na Dieta de Worms, em 1521?', text:'"A menos que eu seja convencido pelo testemunho das Escrituras ou pela razão mais clara... Aqui estou, que Deus me ajude!"', options:['Que só se retrataria se convencido pelas Escrituras ou pela razão','Que se retrataria imediatamente diante do papa','Que renunciaria a todas as suas teses','Que nunca havia escrito as 95 teses'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Após a reunião de Espira, em 1529, os luteranos protestaram contra uma lei desequilibrada, e desde então ficaram conhecidos como {blank}.', answer:'protestantes', options:['protestantes','reformadores','luteranos','dissidentes']},
+    {type:'falling', prompt:'Toque só nos anos ligados à vida de Martinho Lutero:', correct:['1517','1521','1546'], distractors:['1054','1453']},
+    {type:'order', prompt:'Ordene a sequência sobre a morte de Lutero:', pieces:['Quando indagado se morreria firme na fé, respondeu: "Sim!"','No dia 18 de fevereiro de 1546, morreu Martinho Lutero','cuja causa provável foi um problema no coração']},
+  ]
+},
+{
+  id:'l13', title:'Zuínglio e Calvino', pages:'344-349',
+  questions:[
+    {type:'fill', prompt:'Complete:', text:'Ulrico Zuínglio nasceu em 1º de janeiro de 1484, dois meses depois de {blank}.', answer:'Lutero', options:['Lutero','Calvino','Erasmo','Melanchton']},
+    {type:'select', prompt:'O que motivou Zuínglio a atacar a Igreja em 1517?', text:'"Contrariado com a peregrinação de fiéis em busca de \'remissão de pecados\' à Virgem em Einsiedeln, ele atacou a Igreja."', options:['A peregrinação de fiéis em busca de "remissão de pecados"','A criação da Universidade de Basileia','A tradução da Bíblia para o alemão','O casamento de Lutero com Catarina Von Bora'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Os "{blank} artigos de fé" de Zuínglio, redigidos em 1523, são considerados a primeira confissão protestante.', answer:'67', options:['67','95','39','25']},
+    {type:'select', prompt:'Como Zuínglio morreu, segundo o texto?', text:'"Devido a uma guerra civil contra católicos, Zuínglio morreu em 1531 no campo de guerra."', options:['Morreu em 1531, no campo de guerra, numa guerra civil contra católicos','Morreu queimado, condenado pela Inquisição','Morreu de causas naturais, em Genebra','Foi decapitado por ordem do papa'], correct:0},
+    {type:'word', prompt:'Complete o nome desta cidade francesa:', word:'NOYON', hint:'Cidade rural da França onde João Calvino nasceu, em 1509.'},
+    {type:'fill', prompt:'Complete:', text:'Em Basileia, na Suíça, Calvino começou a escrever sua obra-prima, {blank}.', answer:'As Institutas da Religião Cristã', options:['As Institutas da Religião Cristã','A Cidade de Deus','Contra Heresias','A Vulgata Latina']},
+    {type:'timeline_periods', prompt:'Arraste os marcos da vida de Calvino para a ordem cronológica certa:', items:['Nascimento em Noyon (1509)','Conversão e fuga da França (1533-1534)','Basileia: escreve As Institutas (1534)','Chega a Genebra a convite de Farel (1536)','Exílio em Estrasburgo (1538-1541)','Retorno definitivo a Genebra (1541)']},
+    {type:'fill', prompt:'Complete:', text:'Em 1559, Calvino cumpriu um grande sonho seu: a fundação da {blank} de Genebra.', answer:'Academia', options:['Academia','Universidade','Catedral','Biblioteca']},
+    {type:'select', prompt:'O que John Knox disse sobre a escola de Genebra?', text:'"A mais perfeita escola de Cristo desde os dias dos apóstolos."', options:['Que era a mais perfeita escola de Cristo desde os apóstolos','Que era inferior às universidades católicas','Que deveria ser fechada imediatamente','Que só ensinava latim e retórica'], correct:0},
+    {type:'order', prompt:'Ordene a sequência sobre a morte de Calvino:', pieces:['Em 1564, João Calvino morreu','aos 54 anos','depois de anos de trabalho incansável em Genebra']},
+  ]
+},
+{
+  id:'l14', title:'A Reforma na Inglaterra', pages:'350-355',
+  questions:[
+    {type:'timeline_dates', prompt:'Arraste o ano certo para cada marco da Reforma inglesa:', items:[
+      {label:'Henrique VIII rompe com Roma (Ato de Supremacia)', date:'1534'},
+      {label:'Reinado de Eduardo VI', date:'1547'},
+      {label:'Reinado de Maria I ("a sanguinária")', date:'1553'},
+      {label:'Reinado de Elizabeth I', date:'1558'},
+    ]},
+    {type:'fill', prompt:'Complete:', text:'Em 1534, o Parlamento inglês votou o Ato de {blank}, considerando Henrique VIII o chefe supremo da Igreja Anglicana.', answer:'Supremacia', options:['Supremacia','Tolerância','Independência','Reforma']},
+    {type:'select', prompt:'Quem resistiu ao Ato de Supremacia e foi decapitado, segundo o texto?', text:'"Houve pouca resistência; entre os que resistiram, estava Thomas Morus, que foi decapitado."', options:['Thomas Morus','Thomas Cranmer','John Knox','William Tyndale'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Por perseguir e executar protestantes, a Rainha Maria I ficou conhecida como Maria, a {blank}.', answer:'sanguinária', options:['sanguinária','piedosa','católica','justa']},
+    {type:'word', prompt:'Complete o nome deste arcebispo:', word:'CRANMER', hint:'Responsável pela mente teológica e sistematizadora da Reforma inglesa; escreveu o primeiro Livro de Oração.'},
+    {type:'fill', prompt:'Complete:', text:'Os "{blank} e Dois Artigos" de Cranmer serviram de fundamento aos "Trinta e Nove Artigos" que definiram a Igreja Anglicana.', answer:'Quarenta', options:['Quarenta','Trinta','Vinte','Cinquenta']},
+    {type:'select', prompt:'O que Thomas Cranmer fez no momento de sua execução?', text:'"O arcebispo, porém, retirou sua retratação... quando eu estiver na pira será ela que primeiro arderá [referindo-se à mão que escreveu a retratação]."', options:['Retirou publicamente sua retratação, dizendo que sua mão arderia primeiro','Pediu perdão à rainha e foi poupado','Fugiu da Inglaterra antes da execução','Recusou-se a falar até o fim'], correct:0},
+    {type:'match', prompt:'Associe cada doutrina anglicana ao seu significado:', pairs:[
+      ['Suficiência das Escrituras','A Escritura contém tudo o que é necessário para a salvação'],
+      ['Justificação do homem','Somos reputados justos perante Deus somente pelo mérito de Cristo, mediante a fé'],
+      ['Predestinação e eleição','Eleição para a vida eterna e segurança eterna da salvação'],
+    ]},
+    {type:'select', prompt:'O que aconteceu na Noite de São Bartolomeu, em 1572?', text:'"Houve um fatídico episódio conhecido como \'o Massacre da Noite de São Bartolomeu\', quando milhares de protestantes foram perseguidos e mortos."', options:['Milhares de protestantes foram perseguidos e mortos na França','Os protestantes venceram definitivamente na França','O rei da França se converteu ao protestantismo','Foi assinado um tratado de paz religiosa'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Na Escócia, {blank} foi o principal nome da Reforma, fundando a igreja presbiteriana.', answer:'John Knox', options:['John Knox','Thomas Cranmer','Guillaume Farel','Menno Simons']},
+  ]
+},
+{
+  id:'l15', title:'A Reforma se Espalha e a Contrarreforma', pages:'356-361',
+  questions:[
+    {type:'fill', prompt:'Complete:', text:'A Reforma combateu a heresia de {blank}, monge britânico do século V que afirmava que a salvação poderia ser conquistada pelas obras.', answer:'Pelágio', options:['Pelágio','Orígenes','Agostinho','Arminio']},
+    {type:'select', prompt:'O que caracterizava o "sacerdócio de todos os santos", segundo a Reforma?', text:'"Via todos os crentes como sacerdotes, extirpando toda a visão que colocava algum tipo de mediador entre o povo e Deus."', options:['Todos os crentes eram vistos como sacerdotes, sem mediador entre eles e Deus','Apenas o clero podia se aproximar de Deus','Somente o papa podia interpretar as Escrituras','Cada crente precisava de um padre pessoal'], correct:0},
+    {type:'word', prompt:'Complete o nome deste grupo anabatista:', word:'MENONITAS', hint:'Vieram do líder Menno Simons, parte do ressurgimento dos anabatistas.'},
+    {type:'match3', prompt:'Associe cada princípio da Reforma à prática de Roma e ao que a Reforma trouxe:', rows:[
+      ['Autoridade das Escrituras','Substituía a Bíblia pela autoridade da Igreja','Devolveu ao povo a Bíblia como autoridade'],
+      ['Religião Pessoal','Exigia intercessores entre o povo e Deus','Livre acesso a Deus por meio de Cristo'],
+      ['Igreja Nacional','Defendia uma Igreja mundial única','Cada nação passou a ter sua própria Igreja'],
+    ]},
+    {type:'fill', prompt:'Complete:', text:'Em 1534, o militar espanhol {blank} fundou a Ordem dos Jesuítas, aprovada pelo papa em 1540.', answer:'Inácio de Loyola', options:['Inácio de Loyola','Tomás de Aquino','Francisco Xavier','Filipe Neri']},
+    {type:'select', prompt:'O que era o "Index Librorum Prohibitorum"?', text:'"Organizou uma lista de livros proibidos aos católicos: o Index Librorum Prohibitorum (Índice dos livros proibidos)."', options:['Uma lista de livros proibidos aos católicos','Uma lista de santos oficiais da Igreja','O nome do tribunal da Inquisição','O primeiro catálogo de indulgências'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'A Guerra dos Trinta Anos começou em {blank}, cem anos após o início da Reforma.', answer:'1618', options:['1618','1517','1555','1648']},
+    {type:'select', prompt:'Como terminou a Guerra dos Trinta Anos, segundo o texto?', text:'"A guerra terminou com o Tratado de Vestfália, em 1648, na Suécia, após severas batalhas chefiadas por Gustavo Adolfo."', options:['Com o Tratado de Vestfália, em 1648','Com a vitória total dos católicos','Com a dissolução do Sacro Império Romano','Com a conversão de toda a Alemanha ao catolicismo'], correct:0},
+    {type:'falling', prompt:'Toque só nos grupos que vieram do Movimento Puritano inglês:', correct:['Presbiterianos','Congregacionais','Batistas'], distractors:['Jesuítas','Dominicanos']},
+    {type:'fill', prompt:'Complete:', text:'Em 1604, na Holanda, {blank} liderou um movimento contrário à doutrina calvinista da predestinação.', answer:'Jacob Armínio', options:['Jacob Armínio','Menno Simons','Guillaume Farel','Teodoro de Beza']},
+  ]
+},
+{
+  id:'l16', title:'Arminianismo e a Reforma no Brasil', pages:'362-366',
+  questions:[
+    {type:'match', prompt:'Associe cada posição sobre a predestinação e a perseverança à sua corrente:', pairs:[
+      ['Calvinismo (Predestinação)','Baseada nos decretos de Deus'],
+      ['Arminianismo (Predestinação)','Baseada na presciência de Deus'],
+      ['Calvinismo (Perseverança)','De todos os eleitos, pela graça de Deus'],
+    ]},
+    {type:'fill', prompt:'Complete:', text:'Villegagnon aportou na baía de Guanabara em {blank}, com o apoio do huguenote Gaspard de Coligny.', answer:'1555', options:['1555','1517','1620','1862']},
+    {type:'select', prompt:'O que aconteceu com os missionários protestantes presos no Brasil?', text:'"Três foram mortos — sofreram estrangulamento e, ainda vivos, tendo as mãos e pés atados, foram lançados ao mar, na Baía de Guanabara."', options:['Foram estrangulados e lançados ao mar, ainda vivos e atados','Foram libertados sem punição','Fugiram para a Europa antes da condenação','Converteram Villegagnon ao protestantismo'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Por causa dessa perseguição, Villegagnon ficou conhecido como "{blank} da América".', answer:'Caim', options:['Caim','Judas','Nero','Diocleciano']},
+    {type:'select', prompt:'Quando ocorreu a primeira conversão de um brasileiro à fé reformada, segundo o texto?', text:'"No dia 22 de junho de 1862, Serafim Pinto Ribeiro foi o primeiro brasileiro a se converter à fé reformada na Igreja Presbiteriana."', options:['Em 22 de junho de 1862','Em 1555, com Villegagnon','Em 1620, com os puritanos','Em 1906, na Rua Azusa'], correct:0},
+    {type:'word', prompt:'Complete o nome dos seguidores do Movimento Wesleyano:', word:'METODISTAS', hint:'De confissão arminiana, com mais de 12 milhões de membros — a maior denominação norte-americana depois dos batistas.'},
+    {type:'fill', prompt:'Complete:', text:'A Idade Contemporânea tem como marco histórico a Revolução Francesa, em {blank}.', answer:'1789', options:['1789','1618','1906','1517']},
+    {type:'falling', prompt:'Toque só nos resultados do Avivamento Wesleyano, segundo o texto:', correct:['Escola Dominical','Movimento Missionário Moderno','Assistência Social'], distractors:['Inquisição','Concílio de Trento']},
+    {type:'fill', prompt:'Complete:', text:'O marco inicial do movimento pentecostal americano se deu em 1900, quando {blank} alugou a "Mansão de Pedra" em Topeka, Kansas.', answer:'Charles Fox Parham', options:['Charles Fox Parham','William Seymour','John Wesley','Agnes Ozman']},
+    {type:'order', prompt:'Ordene a sequência sobre o Avivamento da Rua Azusa:', pieces:['O avivamento pentecostal do século XX começou em 1906','na Rua Azusa, em Los Angeles, Califórnia','liderado pelo pastor negro William Joseph Seymour']},
+  ]
+},
+{
+  id:'l17', title:'Pentecostais no Brasil e os Avivamentos', pages:'366-372',
+  questions:[
+    {type:'select', prompt:'Segundo Antônio Gouvêa Mendonça, o que ajudou o protestantismo brasileiro a manter certa unidade teológica?', text:'"A origem comum (EUA) da maioria das missões" e "a predominância do culto católico entre os brasileiros."', options:['A origem comum (EUA) das missões e a predominância do culto católico no Brasil','A ausência total de qualquer influência estrangeira','O apoio direto do governo brasileiro','A unificação com a Igreja Católica'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Nas décadas de 30 e 40, surgiram os precursores do avivamento — Essek William Kenyon nos Estados Unidos e {blank} na Inglaterra.', answer:'Smith Wigglesworth', options:['Smith Wigglesworth','John Wesley','Charles Parham','William Seymour']},
+    {type:'select', prompt:'O que caracterizou o ministério de Smith Wigglesworth?', text:'"Realizou milagres e curas surpreendentes durante quatro décadas — mais de uma dúzia de pessoas foram ressuscitadas."', options:['Milagres e curas por quatro décadas, com pessoas ressuscitadas','Um ministério voltado só para a educação teológica','A fundação de universidades na Inglaterra','A tradução da Bíblia para o inglês moderno'], correct:0},
+    {type:'memory', prompt:'Encontre os pares: "Generais de Deus" e seu papel', pairs:[
+      ['John Alexander Dowie','Apóstolo da cura'],
+      ['Amy Semple McPherson','Fundadora da Igreja Quadrangular'],
+      ['William Branham','Profeta'],
+      ['Kathryn Kuhlman','Evangelista e mestre'],
+    ]},
+    {type:'fill', prompt:'Complete:', text:'Kenneth Hagin, aos 17 anos, creu no que Jesus disse em {blank} 11:23-24 e se levantou curado.', answer:'Marcos', options:['Marcos','Mateus','João','Lucas']},
+    {type:'fill', prompt:'Complete:', text:'Em 1974, Hagin fundou o Centro de Treinamento Bíblico Rhema, em Tulsa, {blank}.', answer:'Oklahoma', options:['Oklahoma','Texas','Alabama','Kansas']},
+    {type:'select', prompt:'Qual foi a origem da Assembleia de Deus no Brasil, segundo o texto?', text:'"Têm sua origem com a chegada de dois missionários suecos: Gunnar Vingren e Daniel Berg."', options:['A chegada de dois missionários suecos, Gunnar Vingren e Daniel Berg','Uma missão vinda diretamente da Inglaterra','A pregação de Charles Fox Parham em Belém','A tradução da Bíblia para o português'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Gunnar Vingren e Daniel Berg receberam, num culto, uma visão em que era mostrada a palavra {blank}.', answer:'PARÁ', options:['PARÁ','BELÉM','BRASIL','AMAZÔNIA']},
+    {type:'order', prompt:'Ordene a sequência sobre a fundação do Ministério Verbo da Vida:', pieces:['Bud e Jan Wright chegaram ao Brasil em 22 de agosto de 1983','serviram na Missão Ágape, em Campo Mourão, Paraná','e, em 1985, fundaram a primeira igreja Verbo da Vida, em Guarulhos']},
+    {type:'fill', prompt:'Complete:', text:'Em 2000, a filiação com a Kenneth Hagin Ministries foi oficializada, e os centros passaram a ser chamados de {blank}.', answer:'Rhema Brasil', options:['Rhema Brasil','Verbo da Vida Internacional','Assembleia de Deus Brasil','Igreja Batista Nacional']},
+  ]
+},
+{
+  id:'l18', title:'Dons, Curas e o Sobrenatural na História', pages:'373-379',
+  questions:[
+    {type:'select', prompt:'Segundo Atos 2:37-39, o que Pedro respondeu quando o povo perguntou o que fazer, no Pentecostes?', text:'"Arrependei-vos, e cada um de vós seja batizado em nome de Jesus Cristo... e recebereis o dom do Espírito Santo."', options:['Que se arrependessem, fossem batizados e receberiam o dom do Espírito Santo','Que esperassem em silêncio até nova ordem','Que voltassem para suas casas','Que apenas os apóstolos poderiam receber o Espírito'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Segundo Efésios 4:11-13, os cinco dons do ministério continuarão enquanto houver pessoas para serem {blank}.', answer:'aperfeiçoadas', options:['aperfeiçoadas','batizadas','ordenadas','perdoadas']},
+    {type:'word', prompt:'Complete o nome deste Pai da Igreja:', word:'TERTULIANO', hint:'Viveu entre 160-220 d.C. e se posicionou em defesa do movimento chamado montanismo.'},
+    {type:'select', prompt:'Segundo o erudito F.F. Bruce, o que caracterizava os montanistas?', text:'"Os montanistas, na sua maioria, não se afastaram do fundamento apostólico da Igreja."', options:['Não se afastaram do fundamento apostólico da Igreja','Rejeitavam completamente as Escrituras','Foram os fundadores do gnosticismo','Negavam a existência do Espírito Santo'], correct:0},
+    {type:'select', prompt:'O que Agostinho afirmou, em "Cidade de Deus", sobre os milagres?', text:'"Até agora, portanto, muitos milagres são operados, o mesmo Deus que operou aqueles sobre os quais lemos ainda os realiza."', options:['Que Deus ainda operava milagres em seus dias','Que os milagres haviam cessado com os apóstolos','Que os milagres eram apenas lendas','Que só o papa podia autorizar milagres'], correct:0},
+    {type:'fill', prompt:'Complete:', text:'Hilário de Poitiers escreveu um livro intitulado Tratado Sobre a Santíssima {blank}.', answer:'Trindade', options:['Trindade','Igreja','Salvação','Escritura']},
+    {type:'match', prompt:'Associe cada nome ao seu feito nos avivamentos de cura divina:', pairs:[
+      ['Aimée Semple McPherson','Trabalhou com um ministério de cura; fundou a Igreja Quadrangular'],
+      ['Dr. Charles Price','Pregava quatro vezes ao dia para reuniões de até 15 mil pessoas'],
+      ['Reinhard Bonnke','Dirigiu cruzadas chamadas "Uma África banhada pelo Sangue de Jesus"'],
+    ]},
+    {type:'fill', prompt:'Complete:', text:'John Osteen foi muito usado em cura divina e deixou uma congregação de mais de {blank} mil pessoas.', answer:'10', options:['10','50','100','1']},
+    {type:'falling', prompt:'Toque só nos nomes ligados aos avivamentos de cura divina do século XX:', correct:['Kathryn Kuhlman','Oral Roberts','T.L. Osborn'], distractors:['Inácio de Loyola','Tomás de Aquino']},
+    {type:'order', prompt:'Ordene a sequência dos avivamentos americanos mais recentes:', pieces:['O Avivamento de Cura Divina nos Estados Unidos (1957-1958)','foi seguido pelo Avivamento Carismático (1958-1974)','e pelo Avivamento da Palavra Revelada (1974-1980)']},
+  ]
 }
 ];
 
 /* ================= ESTADO ================= */
-let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{} };
+let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{}, isReview:false };
 const STORAGE_KEY = 'progress';
 
 async function loadProgress(){
@@ -325,21 +642,35 @@ function goTo(id){
   if(id==='screen-map') renderMap();
 }
 
+function bibleIconSVG(color, borderColor){
+  return `<svg width="42" height="42" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="3" width="26" height="28" rx="3" fill="${color}" stroke="${borderColor}" stroke-width="2"/>
+    <line x1="17" y1="4" x2="17" y2="30" stroke="${borderColor}" stroke-width="1.2" opacity="0.5"/>
+    <rect x="13" y="14.8" width="8" height="2.4" fill="#fff"/>
+    <rect x="15.8" y="12" width="2.4" height="8" fill="#fff"/>
+  </svg>`;
+}
+
 function renderMap(){
   document.getElementById('xp-total').textContent = state.xp;
   document.getElementById('streak-total').textContent = state.streak;
   const trail = document.getElementById('trail');
   trail.innerHTML = '';
+  const wave = [0, 36, 56, 36, 0, -36, -56, -36];
   LESSONS.forEach((lesson, idx)=>{
     const done = state.progress[lesson.id];
-    const locked = idx>0 && !state.progress[LESSONS[idx-1].id];
+    const wrap = document.createElement('div'); wrap.className='node-wrap';
+    wrap.style.transform = `translateX(${wave[idx % wave.length]}px)`;
     const btn = document.createElement('button');
-    btn.className = 'node-btn ' + (done?'done':(locked?'':'active'));
-    btn.disabled = locked;
+    btn.className = 'node-btn ' + (done?'done':'active');
     btn.onclick = ()=>startLesson(lesson.id);
-    btn.innerHTML = `<div class="node-emoji">${done?'⭐':(locked?'🔒':'📖')}</div><div class="node-label">${lesson.title}</div>`;
-    trail.appendChild(btn);
+    const iconColor = done ? 'var(--gold)' : 'var(--green)';
+    const borderColor = done ? '#E6B400' : '#46A302';
+    btn.innerHTML = `<div class="node-num">Lição ${idx+1}</div><div class="node-emoji">${bibleIconSVG(iconColor, borderColor)}</div><div class="node-label">${lesson.title}</div>`;
+    wrap.appendChild(btn);
+    trail.appendChild(wrap);
   });
+  requestAnimationFrame(()=>{ window.scrollTo(0, document.body.scrollHeight); });
 }
 
 function startLesson(id){
@@ -348,12 +679,13 @@ function startLesson(id){
   state.qIndex = 0;
   state.hearts = 5;
   state.lessonCorrect = 0;
+  state.isReview = !!state.progress[id];
   goTo('screen-quiz');
   renderQuestion();
 }
 
 function renderHearts(){
-  document.getElementById('hearts-display').textContent = '❤️ ' + state.hearts;
+  document.getElementById('hearts-display').textContent = state.isReview ? '🔁 Revisão' : ('❤️ ' + state.hearts);
 }
 
 function renderQuestion(){
@@ -364,7 +696,7 @@ function renderQuestion(){
   renderHearts();
   document.getElementById('q-footer').innerHTML = '';
 
-  const typeLabels = {fill:'Preencher as Lacunas', word:'Completar Palavra', match:'Associar Colunas', select:'Ler e Selecionar', order:'Montar Frase', timeline_periods:'Timeline', timeline_dates:'Timeline'};
+  const typeLabels = {fill:'Preencher as Lacunas', word:'Completar Palavra', match:'Associar Colunas', match3:'Associar 3 Colunas', memory:'Jogo da Memória', falling:'Palavras Caindo', select:'Ler e Selecionar', order:'Montar Frase', timeline_periods:'Timeline', timeline_dates:'Timeline'};
   document.getElementById('q-type-label').textContent = typeLabels[q.type] || '';
   document.getElementById('q-prompt').textContent = q.prompt;
 
@@ -456,6 +788,75 @@ function renderQuestion(){
     body.appendChild(cols);
     const hint = document.createElement('p'); hint.className='hint-text'; hint.textContent='Toque num item da esquerda e depois um da direita para ligar. Toque num par já feito para desfazer.';
     body.appendChild(hint);
+  }
+
+  else if(q.type==='match3'){
+    q._assignB = {}; q._assignC = {}; q._usedB = new Set(); q._usedC = new Set(); q._selLeft = null;
+    const cols = document.createElement('div'); cols.className='match-cols3';
+    const colA = document.createElement('div'); colA.className='match-col';
+    const colB = document.createElement('div'); colB.className='match-col';
+    const colC = document.createElement('div'); colC.className='match-col';
+    const bItems = q.rows.map(r=>r[1]).sort(()=>Math.random()-0.5);
+    const cItems = q.rows.map(r=>r[2]).sort(()=>Math.random()-0.5);
+
+    q.rows.forEach((row,i)=>{
+      const el = document.createElement('div'); el.className='match-item'; el.textContent=row[0]; el.id='m3a-'+i;
+      el.onclick = ()=>{ if(state.answered) return;
+        if(q._assignB[i]!==undefined && q._assignC[i]!==undefined){ unassignRow3(q,i); return; }
+        colA.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
+        el.classList.add('selected'); q._selLeft = i; };
+      colA.appendChild(el);
+    });
+    bItems.forEach(txt=>{
+      const i = q.rows.findIndex(r=>r[1]===txt);
+      const el = document.createElement('div'); el.className='match-item'; el.textContent=txt; el.id='m3b-'+i;
+      el.onclick = ()=>{ if(state.answered) return;
+        if(q._usedB.has(i)){ const li=Object.keys(q._assignB).find(k=>q._assignB[k]===i); if(li!=null) unassignRow3(q,parseInt(li)); return; }
+        if(q._selLeft==null) return;
+        assignCol3(q, q._selLeft, 'B', i); };
+      colB.appendChild(el);
+    });
+    cItems.forEach(txt=>{
+      const i = q.rows.findIndex(r=>r[2]===txt);
+      const el = document.createElement('div'); el.className='match-item'; el.textContent=txt; el.id='m3c-'+i;
+      el.onclick = ()=>{ if(state.answered) return;
+        if(q._usedC.has(i)){ const li=Object.keys(q._assignC).find(k=>q._assignC[k]===i); if(li!=null) unassignRow3(q,parseInt(li)); return; }
+        if(q._selLeft==null) return;
+        assignCol3(q, q._selLeft, 'C', i); };
+      colC.appendChild(el);
+    });
+    cols.appendChild(colA); cols.appendChild(colB); cols.appendChild(colC);
+    body.appendChild(cols);
+    const hint3 = document.createElement('p'); hint3.className='hint-text'; hint3.textContent='Toque num item da 1ª coluna, depois um da 2ª e um da 3ª pra formar o trio. Toque num trio já feito pra desfazer.';
+    body.appendChild(hint3);
+  }
+
+  else if(q.type==='memory'){
+    q._matchedPairs = new Set(); q._flipped = []; q._locked = false;
+    let deck = [];
+    q.pairs.forEach((p,i)=>{ deck.push({txt:p[0], pid:i}); deck.push({txt:p[1], pid:i}); });
+    deck = deck.map((c,i)=>({...c, cardId:i})).sort(()=>Math.random()-0.5);
+    const grid = document.createElement('div'); grid.className='memory-grid';
+    deck.forEach(card=>{
+      const el = document.createElement('div'); el.className='memory-card hidden-face'; el.textContent='❓';
+      el.id='mem-'+card.cardId; el.dataset.pid = card.pid;
+      el.onclick = ()=>{ flipMemoryCard(q, card.cardId, card.pid, card.txt, el); };
+      grid.appendChild(el);
+    });
+    body.appendChild(grid);
+    const hintM = document.createElement('p'); hintM.className='hint-text'; hintM.textContent='Toque em duas cartas pra tentar achar o par. Errar não tira coração — é só memória!';
+    body.appendChild(hintM);
+  }
+
+  else if(q.type==='falling'){
+    q._deck = [...q.correct.map(w=>({txt:w,ok:true})), ...q.distractors.map(w=>({txt:w,ok:false}))].sort(()=>Math.random()-0.5);
+    q._idx = 0; q._mistakes = 0; q._caught = 0; q._totalCorrect = q.correct.length;
+    const track = document.createElement('div'); track.className='falling-track'; track.id='falling-track';
+    body.appendChild(track);
+    const status = document.createElement('p'); status.className='hint-text'; status.id='falling-status';
+    status.textContent = `Toque só nas palavras certas antes que caiam. Progresso: 0/${q._deck.length}`;
+    body.appendChild(status);
+    spawnFallingWord(q);
   }
 
   else if(q.type==='select'){
@@ -679,9 +1080,116 @@ function finalizeMatchAll(q){
   });
   const overallCorrect = correctCount === q.pairs.length;
   if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
-  else { state.streak = 0; state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.pairs.map(p=>p[0]+' → '+p[1]).join('<br>')); }
+  else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.pairs.map(p=>p[0]+' → '+p[1]).join('<br>')); }
   renderHearts();
   const subtitle = overallCorrect ? undefined : (state.hearts<=0 ? 'Sem corações! Veja as respostas certas acima.' : 'Alguns pares ficaram errados. Veja as respostas certas acima.');
+  renderFeedbackPanel(overallCorrect, subtitle);
+}
+
+function assignCol3(q, li, col, idx){
+  if(col==='B'){ document.getElementById('m3b-'+idx).classList.add('paired'); q._assignB[li]=idx; q._usedB.add(idx); }
+  else { document.getElementById('m3c-'+idx).classList.add('paired'); q._assignC[li]=idx; q._usedC.add(idx); }
+  const doneB = q._assignB[li]!==undefined, doneC = q._assignC[li]!==undefined;
+  if(doneB && doneC){
+    document.getElementById('m3a-'+li).classList.remove('selected');
+    document.getElementById('m3a-'+li).classList.add('paired');
+    q._selLeft = null;
+  }
+  if(Object.keys(q._assignB).length === q.rows.length && Object.keys(q._assignC).length === q.rows.length){ finalizeMatch3(q); }
+}
+function unassignRow3(q, li){
+  const bi = q._assignB[li], ci = q._assignC[li];
+  if(bi!==undefined){ delete q._assignB[li]; q._usedB.delete(bi); document.getElementById('m3b-'+bi).classList.remove('paired'); }
+  if(ci!==undefined){ delete q._assignC[li]; q._usedC.delete(ci); document.getElementById('m3c-'+ci).classList.remove('paired'); }
+  document.getElementById('m3a-'+li).classList.remove('paired','selected');
+  if(q._selLeft===li) q._selLeft=null;
+}
+function finalizeMatch3(q){
+  state.answered = true;
+  let correctCount = 0;
+  q.rows.forEach((row,i)=>{
+    const bi = q._assignB[i], ci = q._assignC[i];
+    const ok = (bi===i && ci===i);
+    if(ok) correctCount++;
+    ['m3a-'+i, 'm3b-'+bi, 'm3c-'+ci].forEach(id=>{ const el=document.getElementById(id); el.classList.remove('paired'); el.classList.add(ok?'matched':'wrong'); });
+  });
+  const overallCorrect = correctCount === q.rows.length;
+  if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.rows.map(r=>r[0]+' → '+r[1]+' → '+r[2]).join('<br>')); }
+  renderHearts();
+  const subtitle = overallCorrect ? undefined : (state.hearts<=0 ? 'Sem corações! Veja as respostas certas acima.' : 'Alguns trios ficaram errados. Veja as respostas certas acima.');
+  renderFeedbackPanel(overallCorrect, subtitle);
+}
+
+function flipMemoryCard(q, cardId, pid, txt, el){
+  if(state.answered || q._locked) return;
+  if(el.classList.contains('matched') || el.classList.contains('revealed')) return;
+  el.classList.remove('hidden-face'); el.classList.add('revealed'); el.textContent = txt;
+  q._flipped.push({cardId, pid, el});
+  if(q._flipped.length === 2){
+    const [a,b] = q._flipped;
+    if(a.pid === b.pid){
+      a.el.classList.add('matched'); b.el.classList.add('matched');
+      a.el.classList.remove('revealed'); b.el.classList.remove('revealed');
+      q._matchedPairs.add(a.pid);
+      q._flipped = [];
+      if(q._matchedPairs.size === q.pairs.length){
+        state.answered = true; state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); renderHearts();
+        renderFeedbackPanel(true);
+      }
+    } else {
+      q._locked = true;
+      setTimeout(()=>{
+        a.el.classList.remove('revealed'); a.el.classList.add('hidden-face'); a.el.textContent='❓';
+        b.el.classList.remove('revealed'); b.el.classList.add('hidden-face'); b.el.textContent='❓';
+        q._flipped = []; q._locked = false;
+      }, 700);
+    }
+  }
+}
+
+function spawnFallingWord(q){
+  if(state.answered) return;
+  if(q._idx >= q._deck.length){ finalizeFalling(q); return; }
+  const track = document.getElementById('falling-track');
+  if(!track) return;
+  track.innerHTML = '';
+  const word = q._deck[q._idx];
+  const el = document.createElement('div'); el.className='falling-word'; el.textContent = word.txt; el.style.top='0%';
+  track.appendChild(el);
+  const duration = 3200, stepTime = 50, steps = duration/stepTime;
+  let step = 0;
+  q._fallInterval = setInterval(()=>{
+    if(state.answered){ clearInterval(q._fallInterval); return; }
+    step++;
+    el.style.top = ((step/steps)*86)+'%';
+    if(step>=steps){
+      clearInterval(q._fallInterval);
+      if(word.ok) q._mistakes++;
+      advanceFalling(q);
+    }
+  }, stepTime);
+  el.onclick = ()=>{
+    if(state.answered) return;
+    clearInterval(q._fallInterval);
+    if(word.ok){ q._caught++; el.style.borderColor='var(--green)'; el.style.background='#D7FFB8'; }
+    else { q._mistakes++; el.style.borderColor='var(--red)'; el.style.background='#FFDFE0'; }
+    setTimeout(()=>advanceFalling(q), 300);
+  };
+}
+function advanceFalling(q){
+  q._idx++;
+  const status = document.getElementById('falling-status');
+  if(status) status.textContent = `Toque só nas palavras certas antes que caiam. Progresso: ${q._idx}/${q._deck.length}`;
+  spawnFallingWord(q);
+}
+function finalizeFalling(q){
+  state.answered = true;
+  const overallCorrect = (q._caught === q._totalCorrect) && (q._mistakes===0);
+  if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
+  else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.correct.join(', ')); }
+  renderHearts();
+  const subtitle = overallCorrect ? undefined : (state.hearts<=0 ? 'Sem corações! Veja as respostas certas acima.' : 'Você deixou passar uma certa ou pegou uma errada. Veja acima.');
   renderFeedbackPanel(overallCorrect, subtitle);
 }
 
@@ -716,7 +1224,7 @@ function finalizeTimelineDates(q){
 
 function showFeedback(correct){
   if(correct){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
-  else { state.streak = 0; state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); }
+  else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); }
   renderHearts();
   renderFeedbackPanel(correct);
 }
@@ -737,7 +1245,7 @@ function renderFeedbackPanel(correct, customSubtitle){
 
 function nextQuestion(){
   const lesson = state.currentLesson;
-  if(state.hearts<=0){ finishLesson(false); return; }
+  if(state.hearts<=0 && !state.isReview){ finishLesson(false); return; }
   state.qIndex++;
   if(state.qIndex >= lesson.questions.length){ finishLesson(true); }
   else { renderQuestion(); }
