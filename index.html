@@ -70,6 +70,7 @@ button{ font-family:inherit; cursor:pointer; }
 .stat-pill{ display:flex; align-items:center; gap:6px; font-family:'Baloo 2'; font-weight:700; font-size:16px; background:var(--gray-bg); padding:6px 12px; border-radius:20px; }
 #screen-map h2{ font-size:20px; color:var(--ink); }
 .map-sub{ color:var(--gray-text); font-weight:700; font-size:13px; margin-top:-8px;}
+.map-intro{ color:var(--gray-text); font-size:13.5px; font-weight:600; line-height:1.45; margin-top:2px; }
 .trail{ display:flex; flex-direction:column; align-items:center; gap:20px; margin-top:12px; padding:20px 0 30px; position:relative; width:100%; }
 .node-row{ display:flex; justify-content:center; width:100%; position:relative; }
 .book-slot{ display:flex; justify-content:center; position:relative; z-index:1; }
@@ -179,7 +180,7 @@ button{ font-family:inherit; cursor:pointer; }
 .feedback-panel.show{ transform:translateY(0); }
 .feedback-panel.ok{ background:#D7FFB8; }
 .feedback-panel.bad{ background:#FFDFE0; }
-.fb-title{ font-family:'Baloo 2'; font-weight:800; font-size:17px; display:flex; align-items:center; gap:8px; }
+.fb-title{ font-family:'Baloo 2'; font-weight:800; font-size:17px; display:flex; align-items:center; justify-content:center; text-align:center; gap:8px; }
 .feedback-panel.ok .fb-title{ color:var(--green-dark); }
 .feedback-panel.bad .fb-title{ color:var(--red-dark); }
 .fb-sub{ font-weight:700; font-size:13px; color:var(--ink); }
@@ -221,8 +222,8 @@ button{ font-family:inherit; cursor:pointer; }
       <div class="stat-pill">🏆 <span id="xp-total">0</span> XP</div>
       <div class="stat-pill">🔥 <span id="streak-total">0</span></div>
     </div>
-    <h2>Módulo 2A</h2>
-    <div class="map-sub">Páginas 283–291</div>
+    <h2>Módulo 2A — História da Igreja</h2>
+    <p class="map-intro">Estude o livro RhemaBrasil (páginas 283–379) em forma de trilha, igual a um joguinho. Toque numa bíblia pra abrir a lição daquele trecho do livro. As douradas (⭐) já foram concluídas — pode revisá-las à vontade, sem risco de ficar sem corações.</p>
     <div class="trail" id="trail"></div>
   </div>
 
@@ -633,6 +634,25 @@ const LESSONS = [
 
 /* ================= ESTADO ================= */
 let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{}, isReview:false };
+const WRONG_PHRASES = [
+  'Quase! Na próxima você acerta.',
+  'Ihh, foi por pouco. Bora tentar de novo?',
+  'Essa não colou, mas a próxima vai.',
+  'Errou essa, mas acerta na próxima.',
+  'Foi mal, essa aqui pegou todo mundo.',
+  'Deu ruim, mas ninguém te viu.',
+  'Errar faz parte. O que importa é continuar.',
+  'Cada erro te deixa mais perto do acerto.',
+  'Não desanima não.',
+  'Respira e parte pra próxima.',
+  'Não foi dessa vez.',
+  'Tenta de novo.',
+  'Faz parte, ninguém é perfeito.',
+  'Essa ficou pra história, mas segue o jogo.',
+  'Errou aqui, acerta ali.',
+  'Deixa essa pra trás e vai pra próxima.',
+];
+let wrongPhraseIndex = 0;
 const STORAGE_KEY = 'progress';
 
 async function loadProgress(){
@@ -929,8 +949,6 @@ function renderQuestion(){
   }
 
   else if(q.type==='select'){
-    const p = document.createElement('div'); p.className='quote-box'; p.textContent = q.text;
-    body.appendChild(p);
     const list = document.createElement('div'); list.className='option-list';
     const order = q.options.map((_,i)=>i).sort(()=>Math.random()-0.5);
     const newCorrectIdx = order.indexOf(q.correct);
@@ -1040,7 +1058,8 @@ function revealAnswer(html){
   const body = document.getElementById('q-body');
   const box = document.createElement('div');
   box.className = 'reveal-box';
-  box.innerHTML = '💡 <strong>Resposta correta:</strong> ' + html;
+  const pages = state.currentLesson ? state.currentLesson.pages : '';
+  box.innerHTML = '💡 <strong>Resposta correta:</strong> ' + html + (pages ? `<br><span style="opacity:0.8;">📖 Confira nas páginas ${pages} do livro.</span>` : '');
   body.appendChild(box);
 }
 
@@ -1104,7 +1123,11 @@ function finalizeAnswer(q, correct, optionEls, correctIdx){
   state.answered = true;
   optionEls.forEach(el=>{ el.classList.add(correct?'correct':'wrong'); });
   document.querySelectorAll('.option').forEach(o=>o.classList.add('disabled'));
-  if(!correct && correctIdx!=null){ document.querySelectorAll('.option')[correctIdx].classList.add('correct'); }
+  if(!correct && correctIdx!=null){
+    const correctEl = document.querySelectorAll('.option')[correctIdx];
+    correctEl.classList.add('correct');
+    revealAnswer(correctEl.querySelector('span').textContent);
+  }
   showFeedback(correct);
 }
 
@@ -1305,9 +1328,12 @@ function renderFeedbackPanel(correct, customSubtitle){
   const footer = document.getElementById('q-footer');
   const panel = document.createElement('div');
   panel.className = 'feedback-panel ' + (correct?'ok':'bad');
+  let subtitleHtml = '';
+  if(correct){ subtitleHtml = '<div class="fb-sub">+10 XP</div>'; }
+  else { subtitleHtml = `<div class="fb-title">${WRONG_PHRASES[wrongPhraseIndex % WRONG_PHRASES.length]}</div>`; wrongPhraseIndex++; }
   panel.innerHTML = `
-    <div class="fb-title">${correct? '✅ Mandou bem!' : '❌ Quase lá!'}</div>
-    ${correct? `<div class="fb-sub">+10 XP</div>` : `<div class="fb-sub">${customSubtitle || 'Sem problema, o importante é continuar aprendendo.'}</div>`}
+    ${correct? `<div class="fb-title">✅ Mandou bem!</div>` : ''}
+    ${subtitleHtml}
     <button class="btn ${correct?'':'red'}" style="width:100%;" onclick="nextQuestion()">CONTINUAR</button>
   `;
   footer.innerHTML='';
