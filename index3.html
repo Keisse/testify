@@ -270,7 +270,7 @@ button{ font-family:inherit; cursor:pointer; }
   <!-- MAP -->
   <div class="screen" id="screen-map">
     <div class="map-header">
-      <div class="stat-pill">🏆 <span id="xp-total">0</span> <span class="xp-max">/ 1.800 XP</span></div>
+      <div class="stat-pill" title="Máximo possível: 1.800 XP. Revisões não geram XP.">🏆 <span id="xp-total">0</span> <span class="xp-max">/ 1.800 XP</span></div>
       <div class="stat-pill">📚 <span id="lessons-total">0</span></div>
     </div>
     <h2>Módulo 2A — História da Igreja</h2>
@@ -709,99 +709,6 @@ function enhancePhoneInputs(){
 
 /* ================= ESTADO ================= */
 const MAX_XP = 1800;
-const SUPABASE_URL = 'https://sctidfqxowttsukjcdzl.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_qo-tV-z9bOjsZYrLvw2K_A_xjIUSmXz';
-
-async function supabaseRequest(path, options = {}){
-  const res = await fetch(SUPABASE_URL + path, {
-    ...options,
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json',
-      ...(options.headers || {})
-    }
-  });
-  if(!res.ok){
-    const text = await res.text().catch(()=> '');
-    throw new Error('Supabase ' + res.status + (text ? ': ' + text : ''));
-  }
-  if(res.status === 204) return null;
-  const text = await res.text();
-  return text ? JSON.parse(text) : null;
-}
-
-async function getSupabaseUserByPhone(phone){
-  const rows = await supabaseRequest('/rest/v1/usuarios?telefone=eq.' + encodeURIComponent(phone) + '&select=*');
-  return rows && rows[0] ? rows[0] : null;
-}
-
-async function createOrUpdateSupabaseUser(name, phone, existingId = null){
-  const now = new Date().toISOString();
-  if(existingId){
-    const rows = await supabaseRequest('/rest/v1/usuarios?id=eq.' + encodeURIComponent(existingId) + '&select=*', {
-      method:'PATCH', body:JSON.stringify({nome:name, telefone:phone, ultimo_acesso_em:now}),
-      headers:{'Prefer':'return=representation'}
-    });
-    return rows && rows[0] ? rows[0] : null;
-  }
-  const rows = await supabaseRequest('/rest/v1/usuarios', {
-    method:'POST', body:JSON.stringify({nome:name, telefone:phone, ultimo_acesso_em:now}),
-    headers:{'Prefer':'return=representation'}
-  });
-  return rows && rows[0] ? rows[0] : null;
-}
-
-async function loadSupabaseProgress(userId){
-  const progressRows = await supabaseRequest('/rest/v1/progresso?usuario_id=eq.' + encodeURIComponent(userId) + '&select=lesson_id,concluida,concluida_em');
-  const statsRows = await supabaseRequest('/rest/v1/estatisticas?usuario_id=eq.' + encodeURIComponent(userId) + '&select=xp');
-  const progress = {};
-  (progressRows || []).forEach(row => { if(row.concluida) progress[row.lesson_id] = true; });
-  return { progress, xp: statsRows && statsRows[0] ? Math.min(MAX_XP, statsRows[0].xp || 0) : 0 };
-}
-
-async function saveSupabaseProgress(){
-  if(!state.user?.supabaseId) return;
-  const userId = state.user.supabaseId;
-  const lessonId = state.currentLesson?.id;
-  if(lessonId && state.progress[lessonId]){
-    await supabaseRequest('/rest/v1/progresso?on_conflict=usuario_id%2Clesson_id', {
-      method:'POST',
-      body:JSON.stringify({usuario_id:userId, lesson_id:String(lessonId), concluida:true, concluida_em:new Date().toISOString(), atualizado_em:new Date().toISOString()}),
-      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}
-    });
-  }
-  await supabaseRequest('/rest/v1/estatisticas?on_conflict=usuario_id', {
-    method:'POST',
-    body:JSON.stringify({usuario_id:userId, xp:Math.min(MAX_XP,state.xp), atualizado_em:new Date().toISOString()}),
-    headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}
-  });
-}
-
-async function syncUserFromSupabase(user){
-  try{
-    let remote = await getSupabaseUserByPhone(user.phone);
-    if(!remote){
-      remote = await createOrUpdateSupabaseUser(user.name, user.phone);
-    } else {
-      remote = await createOrUpdateSupabaseUser(user.name, user.phone, remote.id) || remote;
-    }
-    const remoteProgress = await loadSupabaseProgress(remote.id);
-    user.supabaseId = remote.id;
-    user.name = remote.nome || user.name;
-    user.phone = remote.telefone || user.phone;
-    user.lastAccessAt = remote.ultimo_acesso_em || new Date().toISOString();
-    user.progress = {...(user.progress || {}), ...(remoteProgress.progress || {})};
-    user.xp = Math.max(Math.min(MAX_XP, user.xp || 0), remoteProgress.xp || 0);
-    writeUsers({...(readUsers()), [normalizePhone(user.phone)]:user});
-    localStorage.setItem(CURRENT_USER_KEY, normalizePhone(user.phone));
-    applyUser(user);
-    await saveSupabaseProgress();
-  }catch(error){
-    console.warn('Supabase indisponível; continuando com dados locais.', error);
-  }
-}
-
 let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{}, xpEarned:{}, isReview:false, user:null };
 const WRONG_PHRASES = [
   'Calma, {primeiroNome}! Você está aprendendo. 💚',
@@ -855,19 +762,18 @@ function applyUser(user){
   state.xpEarned = user.xpEarned || {};
 }
 
-async function beginApp(){
+function beginApp(){
   const user = currentUser();
   if(user){
     applyUser(user);
     goTo('screen-map');
-    await syncUserFromSupabase(user);
   } else {
     goTo('screen-identification');
     setTimeout(()=>document.getElementById('user-name')?.focus(),100);
   }
 }
 
-async function saveIdentification(){
+function saveIdentification(){
   const nameEl = document.getElementById('user-name');
   const phoneEl = document.getElementById('user-phone');
   const errorEl = document.getElementById('ident-error');
@@ -879,7 +785,7 @@ async function saveIdentification(){
 
   const users = readUsers();
   const existing = users[phone];
-  let user = existing ? {
+  const user = existing ? {
     ...existing,
     name,
     phone,
@@ -894,30 +800,11 @@ async function saveIdentification(){
     progress:{},
     xpEarned:{}
   };
-
-  try{
-    let remote = await getSupabaseUserByPhone(phone);
-    if(remote){
-      user.supabaseId = remote.id;
-      user.name = remote.nome || name;
-      const remoteProgress = await loadSupabaseProgress(remote.id);
-      user.progress = {...(user.progress || {}), ...(remoteProgress.progress || {})};
-      user.xp = Math.max(Math.min(MAX_XP, user.xp || 0), remoteProgress.xp || 0);
-      await createOrUpdateSupabaseUser(name, phone, remote.id);
-    } else {
-      remote = await createOrUpdateSupabaseUser(name, phone);
-      user.supabaseId = remote?.id || null;
-    }
-  }catch(error){
-    console.warn('Não foi possível sincronizar com Supabase. Usando dados locais.', error);
-  }
-
   users[phone] = user;
   if(!writeUsers(users)){ errorEl.textContent='Não foi possível salvar seus dados neste dispositivo.'; return; }
   localStorage.setItem(CURRENT_USER_KEY, phone);
   applyUser(user);
   goTo('screen-map');
-  await saveSupabaseProgress().catch(error => console.warn('Falha ao salvar progresso no Supabase.', error));
 }
 
 function loadProgress(){
@@ -935,7 +822,6 @@ function saveProgress(){
     ...users[phone],
     name: state.user.name,
     phone,
-    supabaseId: state.user.supabaseId || users[phone].supabaseId || null,
     xp: Math.min(MAX_XP, state.xp),
     streak: state.streak,
     progress: state.progress,
@@ -944,7 +830,6 @@ function saveProgress(){
   };
   writeUsers(users);
   state.user = users[phone];
-  saveSupabaseProgress().catch(error => console.warn('Falha ao salvar progresso no Supabase.', error));
 }
 
 function toggleMascotBubble(){
@@ -1653,7 +1538,7 @@ async function finishLesson(success){
     document.getElementById('result-title').textContent = 'Sem corações! 💔';
     document.getElementById('result-detail').textContent = 'Sem problema, tente essa lição de novo.';
   }
-  document.getElementById('result-xp').textContent = state.lessonCorrect*10;
+  document.getElementById('result-xp').textContent = state.isReview ? 0 : state.lessonCorrect*10;
   await saveProgress();
   goTo('screen-result');
 }
