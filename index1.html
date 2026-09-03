@@ -76,17 +76,6 @@ button{ font-family:inherit; cursor:pointer; }
 #screen-intro h1{ font-size:26px; color:var(--ink); margin-top:6px; }
 #screen-intro p{ color:var(--gray-text); font-size:15px; max-width:300px; font-weight:600; }
 
-/* ---------- IDENTIFICAÇÃO ---------- */
-#screen-identification{ align-items:center; text-align:center; justify-content:center; gap:10px; }
-.ident-card{ width:100%; background:#fff; border:2px solid var(--gray-border); border-radius:20px; padding:22px 18px; box-shadow:0 5px 0 var(--gray-border); }
-.ident-card h2{ font-size:25px; color:var(--ink); margin-bottom:8px; }
-.ident-card p{ color:var(--gray-text); font-size:14px; font-weight:600; line-height:1.45; margin:0 auto 18px; max-width:320px; }
-.ident-form{ display:flex; flex-direction:column; gap:12px; text-align:left; }
-.ident-form label{ font-family:'Baloo 2'; font-weight:800; font-size:13px; color:var(--ink); }
-.ident-form input{ width:100%; border:2px solid var(--gray-border); border-radius:14px; padding:14px 15px; font-family:'Nunito'; font-size:16px; font-weight:700; color:var(--ink); outline:none; }
-.ident-form input:focus{ border-color:var(--blue); }
-.ident-error{ min-height:18px; color:var(--red-dark); font-size:12px; font-weight:800; text-align:center; }
-
 /* ---------- MAP ---------- */
 #screen-map{ gap:14px; }
 .map-header{ display:flex; justify-content:space-between; align-items:center; }
@@ -224,11 +213,6 @@ button{ font-family:inherit; cursor:pointer; }
 .pop{ animation: pop .25s ease; }
 @keyframes pop{ 0%{transform:scale(1);} 40%{transform:scale(1.06);} 100%{transform:scale(1);} }
 </style>
-
-<style id="welcome-box-enhancement">
-.welcome-user-box{width:100%;box-sizing:border-box;margin:0 auto 18px;padding:18px 16px;border-radius:18px;background:linear-gradient(135deg,#E8F8D8,#D8F3FF);text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.08)}
-.welcome-user-box h1,.welcome-user-box h2,.welcome-user-box h3,.welcome-user-box p{text-align:center;margin-left:auto;margin-right:auto}
-</style>
 </head>
 <body>
 <div id="app">
@@ -242,28 +226,7 @@ button{ font-family:inherit; cursor:pointer; }
     </div>
     <h1>Olá, eu sou o Eusebinho!</h1>
     <p>Vou te guiar página por página pela História da Igreja. Fatos, datas, nomes e linhas do tempo direto do seu livro. Toque na minha foto pra saber por que carrego esse pergaminho!</p>
-    <button class="btn" style="margin-top:18px; width:100%;" onclick="beginApp()">COMEÇAR</button>
-  </div>
-
-  <!-- IDENTIFICAÇÃO -->
-  <div class="screen" id="screen-identification">
-    <div class="ident-card">
-      <div style="font-size:52px; margin-bottom:4px;">📜</div>
-      <h2>Vamos começar!</h2>
-      <p>Antes da sua jornada, quero saber como posso chamar você. Seus dados ficam salvos neste dispositivo.</p>
-      <div class="ident-form">
-        <div>
-          <label for="user-name">Como você quer ser chamado?</label>
-          <input id="user-name" type="text" autocomplete="given-name" placeholder="Digite seu nome" maxlength="80">
-        </div>
-        <div>
-          <label for="user-phone">Seu telefone</label>
-          <input id="user-phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" maxlength="20">
-        </div>
-        <div class="ident-error" id="ident-error"></div>
-        <button class="btn" style="width:100%;" onclick="saveIdentification()">CONTINUAR</button>
-      </div>
-    </div>
+    <button class="btn" style="margin-top:18px; width:100%;" onclick="goTo('screen-map')">COMEÇAR</button>
   </div>
 
   <!-- MAP -->
@@ -273,7 +236,7 @@ button{ font-family:inherit; cursor:pointer; }
       <div class="stat-pill">🔥 <span id="streak-total">0</span></div>
     </div>
     <h2>Módulo 2A — História da Igreja</h2>
-    <p class="map-intro">Estude o livro RhemaBrasil (páginas 283–379) em forma de trilha, igual a um joguinho. Toque em qualquer lição para começar — você escolhe a que quiser, sem precisar seguir uma ordem. As douradas (⭐) já foram concluídas e podem ser revisadas à vontade, sem risco de ficar sem corações.</p>
+    <p class="map-intro">Estude o livro RhemaBrasil (páginas 283–379) em forma de trilha, igual a um joguinho. Toque numa bíblia pra abrir a lição daquele trecho do livro. As douradas (⭐) já foram concluídas — pode revisá-las à vontade, sem risco de ficar sem corações.</p>
     <div class="trail" id="trail"></div>
   </div>
 
@@ -682,139 +645,38 @@ const LESSONS = [
 }
 ];
 
-
-function formatPhoneBR(value){
-  const digits = String(value || '').replace(/\D/g,'').slice(0,11);
-  if(!digits) return '';
-  if(digits.length <= 2) return '(' + digits;
-  if(digits.length <= 6) return '(' + digits.slice(0,2) + ') ' + digits.slice(2);
-  if(digits.length <= 10) return '(' + digits.slice(0,2) + ') ' + digits.slice(2,6) + '-' + digits.slice(6);
-  return '(' + digits.slice(0,2) + ') ' + digits.slice(2,7) + '-' + digits.slice(7);
-}
-function applyPhoneMask(input){
-  if(!input || input.dataset.phoneMaskApplied) return;
-  input.dataset.phoneMaskApplied='1'; input.type='tel'; input.inputMode='numeric'; input.autocomplete='tel';
-  input.addEventListener('input', function(){
-    const digits=String(this.value||'').replace(/\D/g,'').slice(0,11);
-    this.value=formatPhoneBR(digits);
-  });
-}
-function enhancePhoneInputs(){
-  document.querySelectorAll('input').forEach(input=>{
-    const meta=((input.id||'')+' '+(input.name||'')+' '+(input.placeholder||'')).toLowerCase();
-    if(meta.includes('telefone')||meta.includes('phone')||meta.includes('celular')) applyPhoneMask(input);
-  });
-}
-
 /* ================= ESTADO ================= */
-let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{}, isReview:false, user:null };
+let state = { xp:0, streak:0, hearts:5, currentLesson:null, qIndex:0, answered:false, lessonCorrect:0, progress:{}, isReview:false };
 const WRONG_PHRASES = [
-  'Calma, {primeiroNome}! Você está aprendendo. 💚',
-  'Quase, {primeiroNome}! Essa passou perto.',
-  'Não desanime, {primeiroNome}! Continue sua jornada.',
-  'Errar faz parte, {primeiroNome}. Você está avançando!',
-  '{primeiroNome}, essa passou perto! Continue!',
-  'Respira, {primeiroNome}. Vamos para a próxima!',
-  'Faz parte, {primeiroNome}. O importante é continuar.',
-  '{primeiroNome}, você está construindo sua história!',
-  'Não foi dessa vez, {primeiroNome}. Tenta a próxima!',
-  'Força, {primeiroNome}! Cada erro ensina alguma coisa.',
+  'Quase! Na próxima você acerta.',
+  'Ihh, foi por pouco. Bora tentar de novo?',
+  'Essa não colou, mas a próxima vai.',
+  'Errou essa, mas acerta na próxima.',
+  'Foi mal, essa aqui pegou todo mundo.',
+  'Deu ruim, mas ninguém te viu.',
+  'Errar faz parte. O que importa é continuar.',
+  'Cada erro te deixa mais perto do acerto.',
+  'Não desanima não.',
+  'Respira e parte pra próxima.',
+  'Não foi dessa vez.',
+  'Tenta de novo.',
+  'Faz parte, ninguém é perfeito.',
+  'Essa ficou pra história, mas segue o jogo.',
+  'Errou aqui, acerta ali.',
+  'Deixa essa pra trás e vai pra próxima.',
 ];
 let wrongPhraseIndex = 0;
-const USERS_STORAGE_KEY = 'eusebinho_users_v1';
-const CURRENT_USER_KEY = 'eusebinho_current_user_v1';
+const STORAGE_KEY = 'progress';
 
-function normalizePhone(phone){ return (phone || '').replace(/\D/g,''); }
-function firstName(name){ return (name || '').trim().split(/\s+/)[0] || 'amigo'; }
-
-function readUsers(){
-  try { return JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '{}'); }
-  catch(e){ return {}; }
-}
-function writeUsers(users){
-  try { localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users)); return true; }
-  catch(e){ return false; }
-}
-function currentUser(){
-  const phone = normalizePhone(localStorage.getItem(CURRENT_USER_KEY) || '');
-  if(!phone) return null;
-  const users = readUsers();
-  return users[phone] || null;
-}
-
-function applyUser(user){
-  state.user = user;
-  state.xp = user.xp || 0;
-  state.streak = user.streak || 0;
-  state.progress = user.progress || {};
-}
-
-function beginApp(){
-  const user = currentUser();
-  if(user){
-    applyUser(user);
-    goTo('screen-map');
-  } else {
-    goTo('screen-identification');
-    setTimeout(()=>document.getElementById('user-name')?.focus(),100);
-  }
-}
-
-function saveIdentification(){
-  const nameEl = document.getElementById('user-name');
-  const phoneEl = document.getElementById('user-phone');
-  const errorEl = document.getElementById('ident-error');
-  const name = nameEl.value.trim();
-  const phone = normalizePhone(phoneEl.value);
-  errorEl.textContent = '';
-  if(!name){ errorEl.textContent = 'Digite como você quer ser chamado.'; nameEl.focus(); return; }
-  if(phone.length < 10){ errorEl.textContent = 'Digite um telefone válido.'; phoneEl.focus(); return; }
-
-  const users = readUsers();
-  const existing = users[phone];
-  const user = existing ? {
-    ...existing,
-    name,
-    phone,
-    lastAccessAt: new Date().toISOString()
-  } : {
-    name,
-    phone,
-    createdAt: new Date().toISOString(),
-    lastAccessAt: new Date().toISOString(),
-    xp:0,
-    streak:0,
-    progress:{}
-  };
-  users[phone] = user;
-  if(!writeUsers(users)){ errorEl.textContent='Não foi possível salvar seus dados neste dispositivo.'; return; }
-  localStorage.setItem(CURRENT_USER_KEY, phone);
-  applyUser(user);
-  goTo('screen-map');
-}
-
-function loadProgress(){
-  const user = currentUser();
-  if(user) applyUser(user);
+async function loadProgress(){
+  try{
+    const r = await window.storage.get(STORAGE_KEY, false);
+    if(r && r.value){ const d = JSON.parse(r.value); state.xp = d.xp||0; state.streak = d.streak||0; state.progress = d.progress||{}; }
+  }catch(e){}
   renderMap();
 }
-
-function saveProgress(){
-  if(!state.user) return;
-  const phone = normalizePhone(state.user.phone);
-  const users = readUsers();
-  if(!users[phone]) return;
-  users[phone] = {
-    ...users[phone],
-    name: state.user.name,
-    phone,
-    xp: state.xp,
-    streak: state.streak,
-    progress: state.progress,
-    lastAccessAt: new Date().toISOString()
-  };
-  writeUsers(users);
-  state.user = users[phone];
+async function saveProgress(){
+  try{ await window.storage.set(STORAGE_KEY, JSON.stringify({xp:state.xp, streak:state.streak, progress:state.progress}), false); }catch(e){}
 }
 
 function toggleMascotBubble(){
@@ -878,8 +740,6 @@ function paradiseMonumentSVG(){
 function renderMap(){
   document.getElementById('xp-total').textContent = state.xp;
   document.getElementById('streak-total').textContent = state.streak;
-  const mapHeading = document.querySelector('#screen-map h2');
-  if(mapHeading && state.user){ mapHeading.textContent = `Olá, ${firstName(state.user.name)}!`; }
   const trail = document.getElementById('trail');
   trail.innerHTML = '';
   const distances = [92, 112, 100, 120, 104];
@@ -1336,7 +1196,6 @@ function finalizeMatchAll(q){
   if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.pairs.map(p=>p[0]+' → '+p[1]).join('<br>')); }
   renderHearts();
-  saveProgress();
   const subtitle = overallCorrect ? undefined : (state.hearts<=0 ? 'Sem corações! Veja as respostas certas acima.' : 'Alguns pares ficaram errados. Veja as respostas certas acima.');
   renderFeedbackPanel(overallCorrect, subtitle);
 }
@@ -1372,7 +1231,6 @@ function finalizeMatch3(q){
   if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.rows.map(r=>r[0]+' → '+r[1]+' → '+r[2]).join('<br>')); }
   renderHearts();
-  saveProgress();
   const subtitle = overallCorrect ? undefined : (state.hearts<=0 ? 'Sem corações! Veja as respostas certas acima.' : 'Alguns trios ficaram errados. Veja as respostas certas acima.');
   renderFeedbackPanel(overallCorrect, subtitle);
 }
@@ -1390,7 +1248,7 @@ function flipMemoryCard(q, cardId, pid, txt, el){
       q._matchedPairs.add(a.pid);
       q._flipped = [];
       if(q._matchedPairs.size === q.pairs.length){
-        state.answered = true; state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); renderHearts(); saveProgress();
+        state.answered = true; state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); renderHearts();
         renderFeedbackPanel(true);
       }
     } else {
@@ -1445,7 +1303,6 @@ function finalizeFalling(q){
   if(overallCorrect){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); revealAnswer(q.correct.join(', ')); }
   renderHearts();
-  saveProgress();
   const subtitle = overallCorrect ? undefined : (state.hearts<=0 ? 'Sem corações! Veja as respostas certas acima.' : 'Você deixou passar uma certa ou pegou uma errada. Veja acima.');
   renderFeedbackPanel(overallCorrect, subtitle);
 }
@@ -1483,7 +1340,6 @@ function showFeedback(correct){
   if(correct){ state.lessonCorrect++; state.streak++; state.xp += 10; launchConfetti(); }
   else { state.streak = 0; if(!state.isReview) state.hearts = Math.max(0, state.hearts-1); document.getElementById('app').classList.add('shake'); setTimeout(()=>document.getElementById('app').classList.remove('shake'),400); }
   renderHearts();
-  saveProgress();
   renderFeedbackPanel(correct);
 }
 
@@ -1493,7 +1349,7 @@ function renderFeedbackPanel(correct, customSubtitle){
   panel.className = 'feedback-panel ' + (correct?'ok':'bad');
   let subtitleHtml = '';
   if(correct){ subtitleHtml = '<div class="fb-sub">+10 XP</div>'; }
-  else { const nome = firstName(state.user?.name); const phrase = WRONG_PHRASES[wrongPhraseIndex % WRONG_PHRASES.length].replaceAll('{primeiroNome}', nome); subtitleHtml = `<div class="fb-title">${phrase}</div>`; wrongPhraseIndex++; }
+  else { subtitleHtml = `<div class="fb-title">${WRONG_PHRASES[wrongPhraseIndex % WRONG_PHRASES.length]}</div>`; wrongPhraseIndex++; }
   panel.innerHTML = `
     ${correct? `<div class="fb-title">✅ Mandou bem!</div>` : ''}
     ${subtitleHtml}
@@ -1542,22 +1398,6 @@ function launchConfetti(){
   }
 }
 
-
-function enhanceWelcomeGreeting(){
-  document.querySelectorAll('.screen').forEach(screen=>{
-    const heading=[...screen.querySelectorAll('h1,h2,h3')].find(el=>el.textContent.trim().toLowerCase().startsWith('olá'));
-    if(!heading || heading.closest('.welcome-user-box')) return;
-    const box=document.createElement('div'); box.className='welcome-user-box';
-    heading.parentElement.insertBefore(box,heading); box.appendChild(heading);
-    const next=box.nextElementSibling; if(next && next.tagName==='P') box.appendChild(next);
-  });
-}
-
-enhancePhoneInputs();
-enhanceWelcomeGreeting();
-
-const phoneObserver = new MutationObserver(()=>{ enhancePhoneInputs(); enhanceWelcomeGreeting(); });
-phoneObserver.observe(document.body,{childList:true,subtree:true});
 loadProgress();
 </script>
 </body>
